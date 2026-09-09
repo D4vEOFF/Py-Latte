@@ -38,7 +38,8 @@ assets/
   style.tex          rozměry, barvy, nadpisy, věty a definice
   macros.tex         vlastní makra
   listing.tex        sazba zdrojového kódu
-  titlepage.tex      titulní strana
+  header.tex         údaje do hlavičky a přepínače
+  titlepage.tex      titulní strana (náhrada \maketitle)
   literatura.bib     databáze zdrojů
 sections/            vlastní text, po jednom souboru na sekci
 figures/             obrázky
@@ -48,5 +49,11 @@ figures/             obrázky
 
 * **barva dokumentu** -- `\definecolor{maincolor}` v `assets/style.tex`,
 * **okraje stránky** -- blok `\geometry` tamtéž,
+* **hlavička** -- `\title`, `\author` a `\date` v `main.tex`; e-mail
+  a instituci pod jméno přidají přepínače `\headeremailtrue`
+  a `\headerinstitutetrue` tamtéž, hodnoty drží makra `\latteemail`
+  a `\latteinstitute` v `assets/header.tex`,
+* **titulní strana místo hlavičky** -- `\input{%%ASSETS%%/titlepage.tex}`
+  v `main.tex` místo `\maketitle`,
 * **nová sekce** -- soubor v `sections/` a `\input` v `main.tex`,
 * **nový zdroj** -- záznam v `assets/literatura.bib`, citace přes `\cite`.

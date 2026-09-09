@@ -66,6 +66,14 @@ class TestFonts(unittest.TestCase):
         self.assertNotIn(r"\usepackage{amssymb}", math)
         self.assertIn("newtxmath", math)
 
+    def test_vychozi_font_sazi_newtx(self):
+        # Výchozí je newtxtext + newtxmath, obojí až za amsmath.
+        preset = fonts.resolve(fonts.DEFAULT_FONT, "pdflatex")
+        math = fonts.math_preamble(preset, "pdflatex")
+        self.assertIn(r"\usepackage{newtxtext}", math)
+        self.assertIn(r"\usepackage{newtxmath}", math)
+        self.assertEqual(config.DEFAULTS["font"], fonts.DEFAULT_FONT)
+
     def test_bezny_font_amssymb_potrebuje(self):
         preset = fonts.resolve("cm", "pdflatex")
         self.assertIn(r"\usepackage{amssymb}", fonts.math_preamble(preset, "pdflatex"))
@@ -147,6 +155,7 @@ class TestCreate(unittest.TestCase):
                 ".vscode/settings.json",
                 "assets/packages.tex",
                 "assets/style.tex",
+                "assets/header.tex",
                 "assets/literatura.bib",
                 "sections/01-uvod.tex",
                 ".latte.toml",
@@ -198,6 +207,45 @@ class TestCreate(unittest.TestCase):
             self.assertTrue((target / "main.tex").is_file())
             self.assertIn("../assets/packages.tex",
                           (target / "main.tex").read_text(encoding="utf-8"))
+
+
+class TestHeader(unittest.TestCase):
+    def test_main_sazi_standardni_hlavicku(self):
+        template = templates.get("article")
+        with tempfile.TemporaryDirectory() as tmp:
+            target = Path(tmp) / "projekt"
+            project.create(
+                template,
+                target,
+                _settings(email="a@b.cz", institute="Ústav"),
+            )
+            main = (target / "main.tex").read_text(encoding="utf-8")
+
+            self.assertIn(r"\maketitle", main)
+            self.assertIn(r"\date{\today}", main)
+            self.assertIn(r"\author{Autor\lattecontact}", main)
+            # Výchozí hlavička je jen název, autor a datum.
+            self.assertIn(r"\headeremailfalse", main)
+            self.assertIn(r"\headerinstitutefalse", main)
+            # Titulní strana zůstává jako nepovinná náhrada.
+            self.assertNotIn("\n\\input{assets/titlepage.tex}", main)
+
+    def test_header_drzi_hodnoty_z_konfigurace(self):
+        template = templates.get("article")
+        with tempfile.TemporaryDirectory() as tmp:
+            target = Path(tmp) / "projekt"
+            project.create(
+                template,
+                target,
+                _settings(email="a_b@c.cz", institute="Ústav & spol."),
+            )
+            header = (target / "assets" / "header.tex").read_text(encoding="utf-8")
+
+            # Hodnoty jsou ošetřené proti LaTeXu.
+            self.assertIn(r"\newcommand{\latteemail}{a\_b@c.cz}", header)
+            self.assertIn(r"\newcommand{\latteinstitute}{Ústav \& spol.}", header)
+            self.assertIn(r"\newif\ifheaderemail", header)
+            self.assertIn(r"\newif\ifheaderinstitute", header)
 
 
 class TestLatexEscape(unittest.TestCase):

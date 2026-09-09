@@ -19,6 +19,7 @@ try:  # Python 3.11+
 except ModuleNotFoundError:  # pragma: no cover - starší Python
     import tomli as tomllib  # type: ignore[no-redef]
 
+from latte import fonts
 from latte.errors import LatteError
 
 APP_NAME = "latte"
@@ -30,7 +31,7 @@ DEFAULTS: "dict[str, object]" = {
     "documentclass": "",
     "lang": "czech",
     "engine": "pdflatex",
-    "font": "cm",
+    "font": fonts.DEFAULT_FONT,
     "editor": "code",
     "open_editor": True,
     "git_init": True,
@@ -72,7 +73,11 @@ def load() -> "dict[str, object]":
         with path.open("rb") as handle:
             parsed = tomllib.load(handle)
     except Exception as exc:  # tomllib hlásí vlastní typ výjimky
-        raise LatteError(f"Konfiguraci {path} se nepodařilo načíst: {exc}") from exc
+        raise LatteError(
+            f"Konfiguraci {path} se nepodařilo načíst: {exc}\n"
+            '  Je to TOML: textové hodnoty patří do uvozovek (font = "times"),\n'
+            "  true a false zůstávají bez nich."
+        ) from exc
 
     unknown = sorted(set(parsed) - set(DEFAULTS))
     if unknown:
@@ -92,7 +97,8 @@ def load() -> "dict[str, object]":
     return values
 
 
-def _toml_value(value: object) -> str:
+def toml_value(value: object) -> str:
+    """Hodnota zapsaná tak, jak se píše do config.toml."""
     if isinstance(value, bool):
         return "true" if value else "false"
     if isinstance(value, str):
@@ -112,7 +118,7 @@ def save(values: "dict[str, object]") -> Path:
         "",
     ]
     for key in DEFAULTS:
-        lines.append(f"{key} = {_toml_value(values.get(key, DEFAULTS[key]))}")
+        lines.append(f"{key} = {toml_value(values.get(key, DEFAULTS[key]))}")
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
     return path
 

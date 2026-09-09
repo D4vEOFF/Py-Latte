@@ -144,7 +144,8 @@ def cmd_fonts() -> int:
     width = max(len(key) for key in fonts.PRESETS)
     print(ui.bold("Presety (pdflatex i unicodové enginy):"))
     for key, preset in fonts.PRESETS.items():
-        print(f"  {ui.bold(key.ljust(width))}  {preset.label}")
+        default = ui.dim("  (výchozí)") if key == fonts.DEFAULT_FONT else ""
+        print(f"  {ui.bold(key.ljust(width))}  {preset.label}{default}")
     print()
     print(
         ui.dim(
@@ -174,9 +175,7 @@ def cmd_config(args: argparse.Namespace) -> int:
         print(ui.dim(f"# {path} ({state})"))
         width = max(len(key) for key in values)
         for key in config.DEFAULTS:
-            value = values[key]
-            shown = "true" if value is True else "false" if value is False else str(value)
-            print(f"  {key.ljust(width)} = {shown or ui.dim('(prázdné)')}")
+            print(f"  {key.ljust(width)} = {config.toml_value(values[key])}")
         return 0
 
     if command == "init":
