@@ -54,7 +54,12 @@
 \fancyhead[R]{\small %%TITLE%%}
 \fancyfoot[C]{\thepage}
 \renewcommand{\headrulewidth}{0.4pt}
-\renewcommand{\headrule}{\hbox to\headwidth{\color{accentcolor}\leaders\hrule height \headrulewidth\hfill}}
+% Linka pod záhlavím. Musí to být \hrule, ne \hbox: box by TeX oddělil
+% od textu záhlaví řádkovou mezerou, celé záhlaví by přerostlo
+% headheight a fancyhdr by si stěžoval. Závěrečný \vskip odečte výšku
+% linky, aby k headheight nepřičetla ani ona -- stejně to dělá výchozí
+% definice ve fancyhdr.
+\renewcommand{\headrule}{{\color{accentcolor}\hrule height \headrulewidth width\headwidth}\vskip-\headrulewidth}
 
 % Stránka, na které začíná kapitola nebo obsah, nese jen číslo strany.
 \fancypagestyle{plain}{%

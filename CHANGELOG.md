@@ -23,6 +23,14 @@ Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.1.0/),
   `\headeremail`/`\headerinstitute`, kterými se údaje zařadí pod jméno
   autora v hlavičce.
 
+### Opraveno
+
+- Šablona **article** sázela linku pod záhlavím jako `\hbox`, který TeX
+  od textu záhlaví oddělil řádkovou mezerou. Záhlaví tím přerostlo
+  `headheight` a `fancyhdr` u každé stránky hlásil `\headheight is too
+  small (14.0pt)`. Linka je nově `\hrule`, jak ji sází i výchozí
+  definice ve fancyhdr, a drží se pod textem záhlaví.
+
 ## [0.1.0] -- 2026-09-09
 
 První vydání.
