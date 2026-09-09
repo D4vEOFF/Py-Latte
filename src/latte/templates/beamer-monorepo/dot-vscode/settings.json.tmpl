@@ -1,0 +1,42 @@
+{
+    // Repozitář obsahuje víc samostatných dokumentů, kořenem je vždy
+    // main.tex ve složce otevřené prezentace.
+    "latex-workshop.latex.search.rootFiles.include": ["*/main.tex"],
+    "latex-workshop.latex.rootFile.doNotPrompt": true,
+
+    "latex-workshop.latex.recipe.default": "latexmk (%%ENGINE%%)",
+    "latex-workshop.latex.recipes": [
+        {
+            "name": "latexmk (%%ENGINE%%)",
+            "tools": ["latexmk"]
+        }
+    ],
+    "latex-workshop.latex.tools": [
+        {
+            "name": "latexmk",
+            "command": "latexmk",
+            "args": [
+                "%%LATEXMK_FLAG%%",
+                "-synctex=1",
+                "-interaction=nonstopmode",
+                "-file-line-error",
+                "-outdir=build",
+                "%DOC%"
+            ],
+            "env": {}
+        }
+    ],
+    "latex-workshop.latex.outDir": "%DIR%/build",
+    "latex-workshop.latex.autoClean.onBuild": false,
+    "latex-workshop.latex.autoBuild.run": "onFileChange",
+    "latex-workshop.view.pdf.viewer": "tab",
+    "latex-workshop.message.error.show": true,
+    "latex-workshop.message.warning.show": false,
+
+    "editor.wordWrap": "on",
+    "files.encoding": "utf8",
+    "[latex]": {
+        "editor.tabSize": 4,
+        "editor.insertSpaces": true
+    }
+}

@@ -1,0 +1,24 @@
+# =====================================================================
+# Konfigurace latexmk
+#
+# Projekt se překládá enginem %%ENGINE%%. Všechno, co vznikne překladem
+# včetně výsledného PDF, jde do build/ -- kořen projektu tak obsahuje
+# jen zdroje a `make clean` je pouhé smazání jednoho adresáře.
+# =====================================================================
+
+$pdf_mode = %%LATEXMK_PDF_MODE%%;
+
+$out_dir = 'build';
+
+# nonstopmode: překlad se nezastaví a nečeká na vstup, doběhne a chyby
+# vypíše do logu. -file-line-error dá chybám tvar "soubor:řádek:",
+# kterému rozumí editory.
+$pdflatex = 'pdflatex -interaction=nonstopmode -file-line-error -synctex=1 %O %S';
+$lualatex = 'lualatex -interaction=nonstopmode -file-line-error -synctex=1 %O %S';
+$xelatex  = 'xelatex -interaction=nonstopmode -file-line-error -synctex=1 %O %S';
+
+# Bibliografii sází biber (biblatex se stylem iso-numeric).
+$bibtex_use = 2;
+
+# Přípony, které `latexmk -c` uklidí nad rámec svého výchozího seznamu.
+$clean_ext = 'bbl run.xml synctex.gz fdb_latexmk fls nav snm vrb';

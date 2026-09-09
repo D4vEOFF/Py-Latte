@@ -1,0 +1,31 @@
+# =====================================================================
+# Překlad prezentací
+#
+# Prezentací je každý podadresář s main.tex. Cíl se jmenuje stejně jako
+# adresář, takže `make ti-01-uvod` přeloží jednu z nich a `make` všechny.
+# =====================================================================
+
+SOURCES := $(wildcard */main.tex)
+TALKS   := $(patsubst %/main.tex,%,$(SOURCES))
+LATEXMK := latexmk %%LATEXMK_FLAG%%
+
+.PHONY: all list clean distclean $(TALKS)
+
+## Přeloží všechny prezentace.
+all: $(TALKS)
+
+## Přeloží jednu prezentaci. Výstup je v <adresář>/build/<adresář>.pdf.
+$(TALKS):
+	$(LATEXMK) -cd -jobname=$@ $@/main.tex
+
+## Vypíše, co je k dispozici.
+list:
+	@for talk in $(TALKS); do echo "  $$talk"; done
+
+## Smaže pomocné soubory všech prezentací, PDF nechá.
+clean:
+	@for talk in $(TALKS); do $(LATEXMK) -cd -c $$talk/main.tex; done
+
+## Smaže celé adresáře s výstupem.
+distclean:
+	@for talk in $(TALKS); do rm -rf $$talk/build; done

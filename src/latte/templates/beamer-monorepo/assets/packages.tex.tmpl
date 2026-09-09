@@ -1,0 +1,81 @@
+% =====================================================================
+% Balíčky sdílené všemi prezentacemi
+%
+% Soubor se vkládá z main.tex jednotlivých prezentací, cesty jsou proto
+% relativní ke složce prezentace, ne ke kořeni repozitáře.
+% =====================================================================
+
+% --- Kódování a jazyk ------------------------------------------------
+%%ENCODING_SETUP%%
+%%BABEL_SETUP%%
+
+% --- Font: %%FONT_LABEL%% ---
+%%FONT_SETUP%%
+% Matematika se sází patkově i v bezpatkovém tématu -- vzorce jsou pak
+% čitelnější a nesplývají s okolním textem.
+\usefonttheme[onlymath]{serif}
+
+% --- Schémata a grafy ------------------------------------------------
+\usepackage{tikz}
+\usetikzlibrary{
+    arrows,
+    arrows.meta,
+    positioning,
+    shapes.geometric,
+    shapes.callouts,
+    shadings,
+    shadows,
+    shadows.blur,
+    patterns,
+    overlay-beamer-styles,
+}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepackage[export]{adjustbox}
+
+% --- Matematika ------------------------------------------------------
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{mathtools}
+\usepackage{cancel}
+%%MATHFONT_SETUP%%
+
+% --- Tabulky ---------------------------------------------------------
+\usepackage{tabularx}
+\usepackage{colortbl}
+\usepackage{makecell}
+\usepackage{multicol}
+
+% --- Boxy a barvy ----------------------------------------------------
+\usepackage{xcolor}
+\usepackage{tcolorbox}
+\usepackage{varwidth}
+\usepackage{fancybox}
+\usepackage{float}
+
+% --- Algoritmy a kód -------------------------------------------------
+\usepackage[linesnumbered, ruled, vlined]{algorithm2e}
+\usepackage{listings}
+
+% --- Seznamy a drobnosti ---------------------------------------------
+\usepackage{enumerate}
+\usepackage{pifont}
+\usepackage{soul}
+\usepackage{subcaption}
+\usepackage{graphicx}
+\usepackage{ifthen}
+\usepackage{etoolbox}
+
+\usepackage{hyperref}
+\hypersetup{
+    pdfencoding=auto,
+    pdfauthor={\insertauthor},
+    pdftitle={\insertsubtitle},
+    pdfcreator={latte},
+}
+
+% --- Bibliografie ----------------------------------------------------
+% Citace podle ČSN ISO 690 (balíček biblatex-iso690). Databáze zdrojů je
+% pro celý repozitář jedna.
+\usepackage[backend=biber, style=iso-numeric, sorting=none, maxnames=10]{biblatex}
+\addbibresource{%%ASSETS%%/literatura.bib}

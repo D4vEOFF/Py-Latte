@@ -1,0 +1,416 @@
+% Enumerate
+%\setlist[enumerate]{topsep=0pt,itemsep=-1ex,partopsep=1ex,parsep=1ex,label=(\arabic*)}
+
+\MakeOuterQuote{"}
+
+%%% Makra pro definice, věty, tvrzení, příklady, ... (vyžaduje baliček amsthm)
+
+\theoremstyle{plain}
+\newtheorem{thm}{%%THM_THEOREM%%}[section]
+\newtheorem{lem}[theorem]{%%THM_LEMMA%%}
+\newtheorem{prop}[theorem]{%%THM_PROPOSITION%%}
+\newtheorem{cor}[theorem]{%%THM_COROLLARY%%}
+\newtheorem*{prop*}{%%THM_PROPOSITION%%}
+
+\theoremstyle{definition}
+\newtheorem{define}[theorem]{%%THM_DEFINITION%%}
+% \newtheorem{example}[theorem]{Příklad}
+% \newtheorem{remark}[theorem]{Poznámka}
+% \newtheorem{convention}[theorem]{Úmluva}
+% \newtheorem{denoting}[theorem]{Značení}
+
+\newenvironment{defblock}[1][]{
+  \begin{block}{\ifthenelse{\equal{#1}{}}
+  {%%THM_DEFINITION%%}
+  {%%THM_DEFINITION%% (#1)}}
+}{\end{block}}
+\newenvironment{thmblock}[1][]{
+  \begin{block}{\ifthenelse{\equal{#1}{}}
+  {%%THM_THEOREM%%}
+  {%%THM_THEOREM%% (#1)}}
+}{\end{block}}
+\newenvironment{corblock}[1][]{
+  \begin{block}{\ifthenelse{\equal{#1}{}}
+  {%%THM_COROLLARY%%}
+  {%%THM_COROLLARY%% (#1)}}
+}{\end{block}}
+\newenvironment{propblock}[1][]{
+  \begin{block}{\ifthenelse{\equal{#1}{}}
+  {%%THM_PROPOSITION%%}
+  {%%THM_PROPOSITION%% (#1)}}
+}{\end{block}}
+\newenvironment{exblock}[1][]{
+  \begin{exampleblock}{\ifthenelse{\equal{#1}{}}
+  {%%THM_EXAMPLE%%}
+  {%%THM_EXAMPLE%% (#1)}}
+}{\end{exampleblock}}
+
+
+% Colors
+\definecolor{lightblue}{HTML}{009AD4}
+\definecolor{lightgreen}{HTML}{68FF00}
+\definecolor{darkgreen}{HTML}{00B600}
+\definecolor{darkblue}{HTML}{0265b3}
+\definecolor{darkred}{HTML}{DA0707}
+\definecolor{lightred}{HTML}{FF5100}
+\definecolor{orange}{HTML}{FFE000}
+\definecolor{codeblue}{HTML}{007eed}
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codebeige}{HTML}{D4A000}
+\definecolor{codepink}{HTML}{FF0055}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\definecolor{decproblemtitlefg}{HTML}{957300}
+\definecolor{decproblembg}{HTML}{F5F0DF}
+
+\definecolor{timportantboxcolor}{HTML}{A97100}
+\definecolor{talertboxcolor}{HTML}{B70000}
+\definecolor{tnoticeboxcolor}{HTML}{159C00}
+\definecolor{tinfoboxcolor}{HTML}{004DFF}
+
+\newcommand{\markred}[1]{\textcolor{lightred}{#1}}
+\newcommand{\markdarkred}[1]{\textcolor{darkred}{#1}}
+\newcommand{\markgreen}[1]{\textcolor{lightgreen}{#1}}
+\newcommand{\markdarkgreen}[1]{\textcolor{darkgreen}{#1}}
+\newcommand{\markorange}[1]{\textcolor{orange}{#1}}
+\newcommand{\markblue}[1]{\textcolor{lightblue}{#1}}
+\newcommand{\markdarkblue}[1]{\textcolor{darkblue}{#1}}
+
+% Math mode settings
+% \AtBeginDocument{
+%     \setlength{\abovedisplayskip}{3pt}
+%     \setlength{\belowdisplayskip}{-4pt}
+% }
+
+% Inline images
+\newcommand{\inlineimgscale}{1.1}
+
+% X and check mark
+\newcommand{\cmark}{\markgreen{\ding{51}}}
+\newcommand{\xmark}{\markred{\ding{55}}}
+
+% Math
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+
+\newcommand{\T}[1]{#1^\top}                     % Tranpozice matice
+\newcommand{\compl}[1]{#1^\complement}
+\newcommand{\mapping}[3]{#1:#2 \rightarrow #3}
+\newcommand{\mapto}[3]{#1:#2 \mapsto #3}
+\newcommand{\set}[1]{\left\{#1\right\}}
+\newcommand{\powset}{\mathcal{P}}
+\newcommand{\code}[1]{\langle#1\rangle}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\argmax}{arg\,max}
+
+% Statistika a AI
+\newcommand{\average}[1]{\overline{#1}}
+\DeclareMathOperator{\median}{med}
+\DeclareMathOperator{\Var}{var}
+\DeclareMathOperator{\Cov}{cov}
+\DeclareMathOperator{\MSE}{MSE}
+\DeclareMathOperator{\SSE}{SSE}
+
+\DeclareMathOperator{\TP}{TP}
+\DeclareMathOperator{\TN}{TN}
+\DeclareMathOperator{\FP}{FP}
+\DeclareMathOperator{\FN}{FN}
+\DeclareMathOperator{\Accuracy}{Acc}
+\DeclareMathOperator{\Precision}{Prec}
+\DeclareMathOperator{\Recall}{Rec}
+\DeclareMathOperator{\Fscore}{F}
+\DeclareMathOperator{\Gini}{Gini}
+
+\DeclareMathOperator{\mspan}{span}
+\DeclareMathOperator{\mrank}{rank}
+\DeclareMathOperator{\tg}{tg}
+\DeclareMathOperator{\id}{id}
+\DeclareMathOperator{\dom}{dom}
+\DeclareMathOperator{\rng}{rng}
+\renewcommand{\emptyset}{\varnothing}
+% Jméno \binary si zabírá newtxmath i newpxmath, proto \binrep.
+\newcommand{\binrep}[1]{\ensuremath{\left\langle #1\right\rangle}_B}
+
+% Sem patří makra konkrétního předmětu: operátory, zkratky názvů
+% problémů a podobně. Šablona žádná nepředepisuje.
+
+%%% Barevné boxíky (notice / info / important / alert)
+%
+% Šířka boxu se nezadává ručně -- box se přizpůsobí šířce svého obsahu.
+% Obsah se vysází do prostředí varwidth, takže krátký text zůstane na
+% jednom řádku; delší text se zalomí, nejvýše však na šířku \linewidth
+% (tj. \textwidth mimo sloupce a minipage). Pokud je titulek širší než
+% obsah, řídí šířku boxu titulek.
+
+\newsavebox{\tboxcontentbox}
+\newsavebox{\tboxtitlebox}
+\newlength{\tboxwidth}
+\newlength{\tboxpadding}
+
+% Geometrie boxu (musí odpovídat stylu tautobox níže):
+% 2 * (boxrule + boxsep + left)
+\setlength{\tboxpadding}{\dimexpr 0.5mm+1mm+4mm\relax}
+\setlength{\tboxpadding}{2\tboxpadding}
+
+\tcbset{tautobox/.style={boxrule=0.5mm, boxsep=1mm, left=4mm, right=4mm,
+                         fonttitle=\bfseries}}
+
+% Začátek sběru obsahu do boxu
+\newcommand{\tboxcollect}{%
+  \begin{lrbox}{\tboxcontentbox}%
+    \begin{varwidth}{\dimexpr\linewidth-\tboxpadding\relax}%
+}
+
+% Ukončení sběru a výpočet výsledné šířky
+% #1 = titulek (pro měření; prázdný u variant bez titulku)
+\newcommand{\tboxmeasure}[1]{%
+    \end{varwidth}%
+  \end{lrbox}%
+  \sbox{\tboxtitlebox}{\bfseries #1}%
+  \setlength{\tboxwidth}{\wd\tboxcontentbox}%
+  \ifdim\wd\tboxtitlebox>\tboxwidth
+    \setlength{\tboxwidth}{\wd\tboxtitlebox}%
+  \fi
+  \addtolength{\tboxwidth}{\tboxpadding}%
+  \ifdim\tboxwidth>\linewidth
+    \setlength{\tboxwidth}{\linewidth}%
+  \fi
+}
+
+% Vysázení boxu s titulkem: #1 = barva, #2 = titulek
+\newcommand{\tboxrenderbox}[2]{%
+  \tboxmeasure{#2}%
+  \begin{center}%
+    \begin{tcolorbox}[tautobox, colback=#1!15, colframe=#1,
+                      title={#2}, width=\tboxwidth]
+      \usebox{\tboxcontentbox}%
+    \end{tcolorbox}%
+  \end{center}%
+}
+
+% Vysázení boxu bez titulku: #1 = barva
+\newcommand{\tboxrenderframe}[1]{%
+  \tboxmeasure{}%
+  \begin{center}%
+    \begin{tcolorbox}[tautobox, colback=#1!15, colframe=#1,
+                      width=\tboxwidth]
+      \usebox{\tboxcontentbox}%
+    \end{tcolorbox}%
+  \end{center}%
+}
+
+% Poznámky (notice)
+\newenvironment{tnoticebox}[1]{%
+  \def\tboxtitletext{#1}\tboxcollect
+}{%
+  \tboxrenderbox{tnoticeboxcolor}{\tboxtitletext}%
+}
+
+\newenvironment{tnoticeframe}{%
+  \tboxcollect
+}{%
+  \tboxrenderframe{tnoticeboxcolor}%
+}
+
+% Informační bloky (info)
+\newenvironment{tinfobox}[1]{%
+  \def\tboxtitletext{#1}\tboxcollect
+}{%
+  \tboxrenderbox{tinfoboxcolor}{\tboxtitletext}%
+}
+
+\newenvironment{tinfoframe}{%
+  \tboxcollect
+}{%
+  \tboxrenderframe{tinfoboxcolor}%
+}
+
+% Důležité bloky (important)
+\newenvironment{timportantbox}[1]{%
+  \def\tboxtitletext{#1}\tboxcollect
+}{%
+  \tboxrenderbox{timportantboxcolor}{\tboxtitletext}%
+}
+
+\newenvironment{timportantframe}{%
+  \tboxcollect
+}{%
+  \tboxrenderframe{timportantboxcolor}%
+}
+
+% Varovné bloky (alert)
+\newenvironment{talertbox}[1]{%
+  \def\tboxtitletext{#1}\tboxcollect
+}{%
+  \tboxrenderbox{talertboxcolor}{\tboxtitletext}%
+}
+
+\newenvironment{talertframe}{%
+  \tboxcollect
+}{%
+  \tboxrenderframe{talertboxcolor}%
+}
+
+% Decision problem
+\newcommand{\decproblem}[3]{
+    \begin{center}
+        \begin{minipage}{.9\textwidth}
+            \begin{table}[!htbp]
+                \centering
+                \bgroup
+                \def\arraystretch{1.8}
+                \begin{tabularx}{\textwidth}{|rX|}
+                \hline
+                \rowcolor{decproblembg} \multicolumn{2}{|c|}{\textcolor{decproblemtitlefg}{\textsc{#1}}} \\ \hline
+                \markdarkred{\textbf{Vstup:}} & #2                \\ \hline
+                \rowcolor{decproblembg} \markdarkred{\textbf{Otázka:}} & #3               \\ \hline
+                \end{tabularx}
+                \egroup
+            \end{table}
+        \end{minipage}
+    \end{center}
+}
+\newcommand{\bigO}{\mathcal{O}}
+
+% TODO
+\newcommand{\todo}[1]{\textcolor{red}{(\noindent TODO: #1.)}}
+
+
+\newcommand{\hlcode}[1]{\colorbox{red}{#1}}
+
+% Algorithms
+\numberwithin{algocf}{section}
+\renewcommand{\algorithmcfname}{%%LABEL_ALGORITHM%%}
+\SetKwInput{KwIn}{Vstup}
+\SetKwInput{KwOut}{Výstup}
+\SetKwProg{Function}{Funkce}{}{end}
+\setlength{\algomargin}{25pt}
+\renewcommand{\thealgocf}{}     % Vypnutí číslování algoritmů
+
+% Definice stylů pro uzly
+\tikzstyle{startstop} = [rectangle, rounded corners, minimum width=1.5cm, minimum height=0.5cm,text centered, draw=black, fill=red!30]
+\tikzstyle{process}   = [rectangle, minimum width=1.5cm, minimum height=0.5cm, text centered, draw=black, fill=orange!30]
+\tikzstyle{decision}  = [diamond, aspect=2, text centered, draw=black, fill=green!30]
+\tikzstyle{arrow}     = [thick,->,>=stealth]
+
+\tikzstyle{vertex}    = [thick, draw, circle, minimum size=4mm, inner sep=1pt, outer sep=1pt, align=center]
+\tikzstyle{vertexplain}    = [minimum size=4mm, inner sep=1pt, outer sep=1pt, align=center]
+\tikzstyle{verteximg}    = [draw, circle, minimum size=4mm, inner sep=0pt, outer sep=1pt, align=center, clip]
+\tikzstyle{verteximgplain}    = [minimum size=4mm, inner sep=0pt, outer sep=1pt, align=center]
+\tikzstyle{task}    = [draw, rounded corners=2pt, minimum width=14mm, minimum height=8mm, inner sep=2pt, align=center]
+
+\tikzstyle{edge}    = [thick,>=stealth]
+\tikzstyle{diredge}    = [thick, ->, >=stealth]
+
+%% Automaty
+\tikzstyle{state}=[%
+    draw,
+    circle,
+    thick,
+    minimum size=10mm,
+    inner sep=0pt,
+    outer sep=0pt
+]
+
+\tikzstyle{acceptstate}=[%
+    state,
+    double,
+    double distance=1pt
+]
+
+\tikzstyle{transition}=[%
+    ->,
+    >=stealth,
+    thick
+]
+
+\newcommand<>{\state}[4][]{%
+    \node#5[state,#1] (#2) at #3 {#4};
+}
+
+\newcommand<>{\acceptingstate}[4][]{%
+    \node#5[acceptstate,#1] (#2) at #3 {#4};
+}
+
+\newcommand<>{\transitionarrow}[5][]{%
+    \path#6 (#2) edge[transition,#1] node[#3] {#4} (#5);
+}
+
+\newcommand<>{\initialstate}[6][]{%
+    \node#7[state,#1] (#2) at #3 {#4};
+    \draw#7[transition] #5 -- (#2.#6);
+}
+
+%%%%%
+
+% Frames
+\newcommand{\tableofcontentsframe}{
+    \begin{frame}{%%LABEL_TOC%%}
+        \tableofcontents
+    \end{frame}
+}
+
+% \definecolor{boxcolor}{HTML}{00820a}
+\newcommand{\titleframe}[1]{%
+  \begin{frame}[plain]
+    \begin{tikzpicture}[remember picture, overlay]
+      \node at (current page.center)
+        [draw=titleframeboxcolor, line width=1pt,
+         inner xsep=10mm, inner ysep=4mm, rounded corners=2mm,
+         text width=0.8\textwidth, align=center,
+         execute at begin node=\setlength{\baselineskip}{2.2em}]
+        {\Huge\markred{#1}\normalfont};
+    \end{tikzpicture}
+  \end{frame}
+  \addtocounter{framenumber}{-1}%
+}
+
+\newenvironment{titleframeenv}[1]{
+    \begin{frame}[plain]
+        \begin{tcolorbox}[colback=white,boxrule=1pt]
+            \begin{center}
+                \Huge\markred{#1}\normalfont
+            \end{center}
+        \end{tcolorbox}
+}{\addtocounter{framenumber}{-1}\end{frame}}
+
+\newcommand{\icon}[1]{
+  \includegraphics[height=\fontcharht\font`\B]{#1}
+}
+
+% Obrázek, který se vždy vejde na snímek. Adjustbox jej v případě potřeby
+% zmenší tak, aby nepřesáhl šířku textu ani zadanou část výšky snímku; díky
+% tomu sedí sazba ve všech používaných poměrech stran (4:3, 16:9 i 16:10).
+% Volitelným argumentem je maximální výška (výchozí 0.68\textheight), povinným
+% cesta k souboru s obrázkem (TikZ zdroj vkládaný přes \input).
+\newcommand{\obrazek}[2][0.68\textheight]{%
+    \begin{figure}
+        \centering
+        \begin{adjustbox}{max width=\linewidth, max totalheight=#1, center}
+            \input{#2}
+        \end{adjustbox}
+    \end{figure}%
+}
+
+% Totéž pro rastrové či vektorové obrázky vkládané přes \includegraphics.
+\newcommand{\obrazekgrf}[2][0.68\textheight]{%
+    \begin{figure}
+        \centering
+        \includegraphics[width=\linewidth, max totalheight=#1, center]{#2}
+    \end{figure}%
+}
+
+% Závěrečný snímek se seznamem zdrojů. Prvním (volitelným) argumentem je název
+% sekce i snímku, druhým čárkou oddělený seznam klíčů z ../assets/literatura.bib.
+% Citace se sázejí podle ČSN ISO 690, v pořadí, v jakém jsou klíče uvedeny.
+\newcommand{\zdrojeframe}[2][%%LABEL_SOURCES%%]{%
+    \section{#1}
+    \nocite{#2}%
+    \begin{frame}[allowframebreaks]{#1}
+        \printbibliography[heading=none]
+    \end{frame}
+}

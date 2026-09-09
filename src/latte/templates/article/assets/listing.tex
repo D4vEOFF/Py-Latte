@@ -1,0 +1,53 @@
+% =====================================================================
+% Sazba zdrojového kódu
+%
+% Barvy jsou společné pro všechny jazyky, aby dokument s ukázkami ve
+% více jazycích působil jednotně.
+% =====================================================================
+
+\definecolor{codeblue}{HTML}{007EED}
+\definecolor{codegreen}{rgb}{0, 0.6, 0}
+\definecolor{codegray}{rgb}{0.5, 0.5, 0.5}
+\definecolor{codebeige}{HTML}{D4A000}
+\definecolor{codeback}{rgb}{0.97, 0.97, 0.95}
+
+\lstdefinestyle{latte}{
+    backgroundcolor=\color{codeback},
+    basicstyle=\footnotesize\ttfamily,
+    keywordstyle=\color{codeblue}\bfseries,
+    commentstyle=\color{codegreen},
+    stringstyle=\color{codebeige},
+    numberstyle=\tiny\color{codegray},
+    identifierstyle=\color{black},
+    numbers=left,
+    numbersep=8pt,
+    frame=single,
+    rulecolor=\color{codegray!40},
+    breaklines=true,
+    breakatwhitespace=false,
+    captionpos=b,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=4,
+    extendedchars=true,
+    xleftmargin=12pt,
+    framexleftmargin=12pt,
+}
+
+\lstset{style=latte}
+
+% Rust není v listings vestavěný, definice jazyka proto musí být vlastní.
+\lstdefinelanguage{Rust}{
+    keywords={as, async, await, break, const, continue, crate, dyn, else,
+        enum, extern, false, fn, for, if, impl, in, let, loop, match, mod,
+        move, mut, pub, ref, return, self, Self, static, struct, super,
+        trait, true, type, unsafe, use, where, while},
+    sensitive=true,
+    morecomment=[l]{//},
+    morecomment=[s]{/*}{*/},
+    morestring=[b]",
+}
+
+% Krátký úryvek kódu uvnitř odstavce.
+\newcommand{\inlinecode}[1]{\texttt{\colorbox{codeback}{#1}}}

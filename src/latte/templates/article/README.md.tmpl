@@ -1,0 +1,52 @@
+# %%TITLE%%
+
+Projekt založený nástrojem [latte](https://github.com/D4vEOFF/Py-Latte).
+
+| | |
+|---|---|
+| Třída dokumentu | `%%DOCUMENTCLASS%%` |
+| Engine | `%%ENGINE%%` |
+| Font | %%FONT_LABEL%% |
+| Jazyk | `%%LANG%%` |
+
+## Překlad
+
+```bash
+make          # jeden překlad
+make watch    # překládá při každé změně
+make view     # otevře výsledné PDF
+make clean    # smaže pomocné soubory
+```
+
+Bez `make` lze použít latexmk přímo:
+
+```bash
+latexmk %%LATEXMK_FLAG%% main.tex
+```
+
+Výstup vzniká v `build/`.
+
+Ve VS Code stačí otevřít `main.tex`; rozšíření **LaTeX Workshop** použije
+nastavení z `.vscode/settings.json`, tedy stejný latexmk.
+
+## Struktura
+
+```
+main.tex             kostra dokumentu, vkládá zbytek
+assets/
+  packages.tex       seznam balíčků
+  style.tex          rozměry, barvy, nadpisy, věty a definice
+  macros.tex         vlastní makra
+  listing.tex        sazba zdrojového kódu
+  titlepage.tex      titulní strana
+  literatura.bib     databáze zdrojů
+sections/            vlastní text, po jednom souboru na sekci
+figures/             obrázky
+```
+
+## Kde se co mění
+
+* **barva dokumentu** -- `\definecolor{maincolor}` v `assets/style.tex`,
+* **okraje stránky** -- blok `\geometry` tamtéž,
+* **nová sekce** -- soubor v `sections/` a `\input` v `main.tex`,
+* **nový zdroj** -- záznam v `assets/literatura.bib`, citace přes `\cite`.

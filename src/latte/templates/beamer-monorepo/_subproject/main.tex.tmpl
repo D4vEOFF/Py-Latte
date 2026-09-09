@@ -1,0 +1,50 @@
+% =====================================================================
+% %%TITLE%%
+%
+% Vygenerováno nástrojem latte dne %%DATE%%.
+% Překlad z kořene repozitáře: make %%PROJECT_NAME%%
+% =====================================================================
+
+\documentclass[%%CLASS_OPTIONS%%]{%%DOCUMENTCLASS%%}
+
+% Sdílená preambule celého repozitáře.
+\input{%%ASSETS%%/packages.tex}
+\input{%%ASSETS%%/theme.tex}
+\input{%%ASSETS%%/macros.tex}
+\input{%%ASSETS%%/listing.tex}
+
+% Téma této prezentace. Používá ho titulní strana i patička.
+\def\presentationtitle{%%TITLE%%}
+
+\begin{document}
+
+    \input{../titlepage.tex}
+
+    \tableofcontentsframe
+
+    % =================================================================
+    \section{%%SECTION_INTRO%%}
+    % =================================================================
+
+    \begin{frame}{%%SECTION_INTRO%%}
+        \begin{itemize}
+            \visible<2->{\item První bod se objeví hned.}
+            \visible<3->{\item Další až po kliknutí.}
+        \end{itemize}
+    \end{frame}
+
+    \begin{frame}{%%THM_DEFINITION%% a %%THM_THEOREM%%}
+        \begin{defblock}[%%THM_EXAMPLE%%]
+            Text definice.
+        \end{defblock}
+
+        \begin{thmblock}
+            Text věty.
+        \end{thmblock}
+    \end{frame}
+
+    % Závěrečný snímek se zdroji. Argumentem je čárkou oddělený seznam
+    % klíčů z ../assets/literatura.bib.
+    \zdrojeframe{mittelbach-companion}
+
+\end{document}

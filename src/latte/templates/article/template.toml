@@ -1,0 +1,9 @@
+name = "article"
+label = "Článek (documentclass article)"
+description = """
+Jednodokumentový projekt: main.tex, sdílené assets/ s balíčky, stylem,
+makry a bibliografií, složka sections/ na text a figures/ na obrázky.
+"""
+kind = "single"
+documentclass = "article"
+class_options = "11pt,a4paper"

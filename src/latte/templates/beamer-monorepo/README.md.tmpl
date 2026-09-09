@@ -1,0 +1,70 @@
+# %%TITLE%%
+
+Repozitář prezentací založený nástrojem
+[latte](https://github.com/D4vEOFF/Py-Latte). Všechny prezentace sdílejí
+jednu preambuli, jedno téma, jednu sadu maker a jednu databázi zdrojů.
+
+| | |
+|---|---|
+| Třída dokumentu | `%%DOCUMENTCLASS%%` |
+| Engine | `%%ENGINE%%` |
+| Font | %%FONT_LABEL%% |
+| Jazyk | `%%LANG%%` |
+
+## Nová prezentace
+
+```bash
+latte add ti-01-uvod
+```
+
+Vznikne složka `ti-01-uvod/` s vlastním `main.tex`, který vkládá sdílené
+soubory z `assets/`.
+
+## Překlad
+
+```bash
+make                # všechny prezentace
+make ti-01-uvod     # jednu
+make list           # co je k dispozici
+make clean          # pomocné soubory
+```
+
+Výstupem je `<složka>/build/<složka>.pdf`.
+
+## Struktura
+
+```
+assets/
+  packages.tex       balíčky sdílené všemi prezentacemi
+  theme.tex          barvy a vzhled beameru
+  macros.tex         věty, definice, rámečky, značení
+  listing.tex        sazba zdrojového kódu
+  literatura.bib     společná databáze zdrojů
+images/              loga a obrázky sdílené mezi prezentacemi
+titlepage.tex        titulní strana, společná pro všechny prezentace
+<prezentace>/
+  main.tex           obsah jedné prezentace
+```
+
+## Kde se co mění
+
+* **barva prezentací** -- `\definecolor{maincolor}` v `assets/theme.tex`,
+* **logo na titulní straně** -- `\def\schoollogo{../images/logo.pdf}`
+  v `main.tex` před vložením `../titlepage.tex`,
+* **název předmětu** -- `\def\subjectname{...}` tamtéž,
+* **poměr stran** -- volba `aspectratio` v `\documentclass`
+  (`43`, `169`, `1610`),
+* **handout** (bez postupného odkrývání) -- přidat `handout`
+  do voleb `\documentclass`.
+
+## Užitečná makra
+
+| Makro | K čemu |
+|---|---|
+| `\tableofcontentsframe` | snímek s obsahem |
+| `\titleframe{Text}` | oddělovací snímek s nadpisem |
+| `\zdrojeframe{klic1,klic2}` | závěrečný snímek se zdroji |
+| `\defblock`, `\thmblock`, `\propblock`, `\corblock`, `\exblock` | bloky s definicí, větou, tvrzením, důsledkem, příkladem |
+| `\tnoticebox`, `\tinfobox`, `\timportantbox`, `\talertbox` | rámečky přizpůsobené šířce obsahu |
+| `\decproblem{Název}{Vstup}{Otázka}` | zápis rozhodovacího problému |
+| `\obrazek[výška]{soubor}` | obrázek na střed |

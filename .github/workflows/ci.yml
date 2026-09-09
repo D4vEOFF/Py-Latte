@@ -1,0 +1,79 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  testy:
+    name: Testy (Python ${{ matrix.python }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["3.9", "3.10", "3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+
+      - name: Instalace
+        run: python -m pip install --upgrade pip && pip install .
+
+      - name: Testy
+        run: python -m unittest discover -s tests -v
+        env:
+          PYTHONPATH: src
+
+      - name: Založení projektu
+        run: |
+          latte zkouska --no-git --no-open
+          test -f zkouska/main.tex
+          test -f zkouska/.vscode/settings.json
+          latte prezentace -t beamer-monorepo --no-git --no-open
+          cd prezentace && latte add p01 && test -f p01/main.tex
+
+  preklad:
+    name: Překlad vygenerovaných projektů
+    runs-on: ubuntu-latest
+    container: texlive/texlive:latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Python a instalace
+        run: |
+          apt-get update -qq
+          apt-get install -y -qq python3 python3-pip python3-venv
+          python3 -m venv /opt/latte
+          /opt/latte/bin/pip install --quiet .
+
+      # Presety se liší tím, kam v preambuli patří jejich balíček;
+      # chybu v tom pozná až skutečný překlad.
+      - name: Article -- všechny fontové presety
+        run: |
+          set -e
+          for font in cm lmodern libertinus times palatino pxfonts \
+                      charter kpfonts fourier helvet; do
+            /opt/latte/bin/latte "t-$font" -f "$font" --no-git --no-open
+            (cd "t-$font" && latexmk -pdf main.tex >/dev/null) \
+              || { echo "::error::preset $font se nepřeložil"; \
+                   sed -n '/^!/,+5p' "t-$font/build/main.log"; exit 1; }
+            echo "$font: ok"
+          done
+
+      - name: Article -- lualatex se systémovým fontem
+        run: |
+          /opt/latte/bin/latte t-lua -e lualatex -f "TeX Gyre Pagella" \
+            --no-git --no-open
+          cd t-lua && latexmk -lualatex main.tex >/dev/null
+
+      - name: Beamer monorepo
+        run: |
+          /opt/latte/bin/latte prezentace -t beamer-monorepo --no-git --no-open
+          cd prezentace
+          /opt/latte/bin/latte add p01
+          make

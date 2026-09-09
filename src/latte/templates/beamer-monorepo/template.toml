@@ -1,0 +1,11 @@
+name = "beamer-monorepo"
+label = "Prezentace beamer (monorepo se sdílenými assets)"
+description = """
+Repozitář, ve kterém sdílí libovolný počet prezentací jednu preambuli,
+jedno téma, jednu sadu maker a jednu databázi zdrojů. Další prezentaci
+přidá `latte add <jmeno>`.
+"""
+kind = "monorepo"
+documentclass = "beamer"
+class_options = "11pt,professionalfont,aspectratio=169"
+subproject = "_subproject"

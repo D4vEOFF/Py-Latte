@@ -1,0 +1,23 @@
+# =====================================================================
+# Konfigurace latexmk pro celý repozitář
+#
+# Soubor se čte z kořene repozitáře; jednotlivé prezentace se překládají
+# přepínačem -cd, takže výstup vzniká v build/ uvnitř jejich složky.
+# =====================================================================
+
+$pdf_mode = %%LATEXMK_PDF_MODE%%;
+
+$out_dir = 'build';
+
+# nonstopmode: překlad se nezastaví a nečeká na vstup, doběhne a chyby
+# vypíše do logu. -file-line-error dá chybám tvar "soubor:řádek:",
+# kterému rozumí editory.
+$pdflatex = 'pdflatex -interaction=nonstopmode -file-line-error -synctex=1 %O %S';
+$lualatex = 'lualatex -interaction=nonstopmode -file-line-error -synctex=1 %O %S';
+$xelatex  = 'xelatex -interaction=nonstopmode -file-line-error -synctex=1 %O %S';
+
+# Bibliografii sází biber (biblatex se stylem iso-numeric).
+$bibtex_use = 2;
+
+# Přípony, které beamer nechává po sobě navíc.
+$clean_ext = 'bbl run.xml synctex.gz fdb_latexmk fls nav snm vrb';

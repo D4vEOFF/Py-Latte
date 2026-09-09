@@ -1,0 +1,57 @@
+% =====================================================================
+% Titulní strana
+%
+% Stranu dělí šikmá hrana: horní barevná plocha nese název dokumentu,
+% spodní světlá část autora, kontakt a instituci. Text se bere z \title
+% a \author zadaných v main.tex, kontakt z maker \email a \institute --
+% soubor se tedy kvůli jinému dokumentu nemusí upravovat.
+% =====================================================================
+
+\providecommand{\email}{%%EMAIL%%}
+\providecommand{\institute}{%%INSTITUTE%%}
+
+% \@title a spol. jsou vnitřní příkazy třídy, proto \makeatletter.
+\makeatletter
+\newcommand{\latteinserttitle}{\@title}
+\newcommand{\latteinsertauthor}{\@author}
+\newcommand{\latteinsertdate}{\@date}
+\makeatother
+
+\begin{titlepage}
+    \thispagestyle{empty}
+    \begin{tikzpicture}[remember picture, overlay]
+        \node[anchor=north west, inner sep=0pt] at (current page.north west) {%
+            \begin{tikzpicture}[x=\paperwidth, y=\paperheight]
+                % Světlejší pruh podél šikmé hrany
+                \fill[accentcolor]
+                    (0,-0.475) -- (1,-0.335) -- (1,-0.365) -- (0,-0.505) -- cycle;
+
+                % Barevná plocha se šikmou hranou
+                \fill[maincolor]
+                    (0,0) -- (1,0) -- (1,-0.32) -- (0,-0.46) -- cycle;
+
+                % Název dokumentu
+                \node[anchor=north west, white, align=left, inner sep=0pt,
+                      text width=0.78\paperwidth]
+                    at (0.09,-0.13)
+                    {\fontsize{26}{31}\selectfont\bfseries\latteinserttitle};
+
+                % Autor, kontakt, instituce
+                \node[anchor=south west, align=left, inner sep=0pt,
+                      text width=0.60\paperwidth]
+                    at (0.09,-0.86)
+                    {%
+                        {\large\bfseries\latteinsertauthor\par}%
+                        \ifdefempty{\email}{}{{\small\texttt{\email}\par}}%
+                        \vskip0.6em
+                        \ifdefempty{\institute}{}{{\small\institute\par}}%
+                    };
+
+                % Datum
+                \node[anchor=south west, font=\small, inner sep=0pt]
+                    at (0.09,-0.92) {\latteinsertdate};
+            \end{tikzpicture}%
+        };
+    \end{tikzpicture}
+    \null
+\end{titlepage}

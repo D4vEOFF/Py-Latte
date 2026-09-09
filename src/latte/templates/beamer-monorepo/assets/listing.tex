@@ -1,0 +1,104 @@
+\lstdefinelanguage{Rust}{
+    keywords={as, break, const, continue, crate, else, enum, extern, false, fn, for, if, impl, in, let, loop, match, mod, move, mut, pub, ref, return, self, Self, static, struct, super, trait, true, type, unsafe, use, where, while, async, await, dyn},
+    sensitive=true,
+    morecomment=[l]{//},
+    morecomment=[s]{/*}{*/},
+    morestring=[b]",
+    morestring=[b]',
+}
+
+% Styl pro Rust
+\lstdefinestyle{rust}{
+    language=Rust,
+    basicstyle=\footnotesize\ttfamily\color{black},
+    keywordstyle=\color{codeblue}\bfseries,
+    commentstyle=\color{codegreen}\ttfamily,
+    stringstyle=\color{codebeige}\ttfamily,
+    breaklines=true,
+    xleftmargin=10pt,
+    framexleftmargin=17pt,
+    framexrightmargin=5pt,
+    framexbottommargin=4pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=2,
+}
+
+% Styl pro Python
+\lstdefinestyle{python}{
+    language=Python,
+    tabsize=2,
+    extendedchars=true,
+    breaklines=true,
+    basicstyle=\footnotesize\ttfamily,
+    stringstyle=\color{codebeige}\ttfamily,
+    commentstyle=\color{codegreen}\ttfamily,
+    keywordstyle=\color{codeblue}\bfseries,
+    identifierstyle=\color{black},
+    showspaces=false,
+    showtabs=true,
+    xleftmargin=10pt,
+    framexleftmargin=17pt,
+    framexrightmargin=17pt,
+    framexbottommargin=4pt,
+    showstringspaces=false,
+    morekeywords={False, None, True, and, as, assert, async, await, break, class, continue, def, del, elif, else, except, finally, for, from, global, if, import, in, is, lambda, nonlocal, not, or, pass, raise, return, try, while, with, yield}
+}
+
+% Styl pro C#
+\lstdefinestyle{sharpc}{
+    language={csh},
+    tabsize=2,
+    extendedchars=true,
+    breaklines=true,
+    basicstyle=\footnotesize\ttfamily,
+    stringstyle=\color{codebeige}\ttfamily,
+    commentstyle=\color{codegreen}\ttfamily,
+    keywordstyle=\color{codeblue}\bfseries,
+    identifierstyle=\color{black},
+    showspaces=false,
+    showtabs=true,
+    xleftmargin=10pt,
+    framexleftmargin=17pt,
+    framexrightmargin=17pt,
+    framexbottommargin=4pt,
+    showstringspaces=false,
+    morekeywords={abstract, event, new, struct, as, explicit, null, switch, base, extern, object, this, bool, false, operator, throw, break, finally, out, true, byte, fixed, override, try, case, float, params, typeof, catch, for, private, uint, char, foreach, protected, ulong, checked, goto, public, unchecked, class, if, readonly, unsafe, const, implicit, ref, ushort, continue, in, return, using, decimal, int, sbyte, virtual, default, interface, sealed, volatile, delegate, internal, short, void, do, is, sizeof, while, double, lock, stackalloc, else, long, static, enum, namespace, string}
+}
+
+% Styl pro C
+\lstdefinestyle{clang}{
+    language=C,
+    basicstyle=\scriptsize\ttfamily\color{black},
+    keywordstyle=\color{codeblue}\bfseries,
+    commentstyle=\color{codegreen}\ttfamily,
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codebeige}\ttfamily,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbersep=5pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    morekeywords={
+        auto, break, case, char, const, continue, default, do, double, else, enum, extern, float, for, goto, if, inline, int, long, register, restrict, return, short, signed, sizeof, static, struct, switch, typedef, union, unsigned, void, volatile, while, 
+        _Alignas, _Alignof, _Atomic, _Bool, _Complex, _Generic, _Imaginary, _Noreturn, _Static_assert, _Thread_local
+    },
+    tabsize=2,
+    moredelim=*[l][\color{red}\bfseries]{\#},
+    identifierstyle=\color{black},
+    xleftmargin=10pt,          % přidá odsazení zleva
+    framexleftmargin=17pt,     % odsazení rámce zleva, pokud používáte rámeček
+    framexrightmargin=5pt,     % odsazení rámce zprava
+    framexbottommargin=4pt     % odsazení rámce zdola
+}
+
+% Nastavení výchozího stylu
+\lstset{
+    escapeinside={(*}{*)},
+    style=clang,
+    basicstyle=\footnotesize\ttfamily\color{black}
+}

@@ -1,0 +1,32 @@
+% =====================================================================
+% %%TITLE%%
+%
+% Vygenerováno nástrojem latte dne %%DATE%%.
+% Překlad: %%ENGINE%% (latexmk -pdf, případně `make`).
+% =====================================================================
+
+\documentclass[%%CLASS_OPTIONS%%]{%%DOCUMENTCLASS%%}
+
+% Sdílená preambule. Pořadí je závazné: balíčky, pak jejich nastavení,
+% teprve nakonec vlastní makra, která už nastavení předpokládají.
+\input{%%ASSETS%%/packages.tex}
+\input{%%ASSETS%%/style.tex}
+\input{%%ASSETS%%/macros.tex}
+\input{%%ASSETS%%/listing.tex}
+
+\title{%%TITLE%%}
+\author{%%AUTHOR%%}
+\date{\today}
+
+\begin{document}
+
+\input{%%ASSETS%%/titlepage.tex}
+
+\tableofcontents
+\clearpage
+
+\input{sections/01-uvod.tex}
+
+\printbibliography[heading=bibintoc]
+
+\end{document}

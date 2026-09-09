@@ -1,0 +1,105 @@
+% =====================================================================
+% Vzhled dokumentu
+%
+% Nastavení balíčků načtených v packages.tex: rozměry stránky, barevná
+% paleta, hlavička a patička, tvar nadpisů a věty s definicemi.
+% =====================================================================
+
+% --- Rozměry stránky -------------------------------------------------
+\geometry{
+    a4paper,
+    top=2.5cm,
+    bottom=2.5cm,
+    left=2.5cm,
+    right=2.5cm,
+    headheight=14pt,
+}
+
+% --- Barevná paleta --------------------------------------------------
+% Jediná barva, ze které se odvozuje zbytek dokumentu. Změnou tohoto
+% řádku se přebarví nadpisy, odkazy i rámečky.
+\definecolor{maincolor}{HTML}{1E5B4B}
+
+\definecolor{accentcolor}{HTML}{7CA096}
+\definecolor{lightgray}{HTML}{E3E3E3}
+
+\definecolor{lightblue}{HTML}{009AD4}
+\definecolor{darkblue}{HTML}{0265B3}
+\definecolor{darkred}{HTML}{DA0707}
+\definecolor{lightred}{HTML}{FF5100}
+\definecolor{darkgreen}{HTML}{00B600}
+
+% Barvy rámečků -- odstín napovídá závažnost sdělení.
+\definecolor{noticecolor}{HTML}{159C00}
+\definecolor{infocolor}{HTML}{004DFF}
+\definecolor{importantcolor}{HTML}{A97100}
+\definecolor{alertcolor}{HTML}{B70000}
+
+% --- Odkazy ----------------------------------------------------------
+\hypersetup{
+    unicode=true,
+    colorlinks=true,
+    linkcolor=maincolor,
+    citecolor=maincolor,
+    urlcolor=darkblue,
+    pdfauthor={%%AUTHOR%%},
+    pdftitle={%%TITLE%%},
+    pdfcreator={latte},
+}
+
+% --- Hlavička a patička ----------------------------------------------
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\nouppercase{\leftmark}}
+\fancyhead[R]{\small %%TITLE%%}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{accentcolor}\leaders\hrule height \headrulewidth\hfill}}
+
+% Stránka, na které začíná kapitola nebo obsah, nese jen číslo strany.
+\fancypagestyle{plain}{%
+    \fancyhf{}%
+    \fancyfoot[C]{\thepage}%
+    \renewcommand{\headrulewidth}{0pt}%
+}
+
+% --- Nadpisy ---------------------------------------------------------
+\titleformat{\section}
+    {\normalfont\Large\bfseries\color{maincolor}}
+    {\thesection}{1em}{}
+\titleformat{\subsection}
+    {\normalfont\large\bfseries\color{maincolor}}
+    {\thesubsection}{1em}{}
+\titleformat{\subsubsection}
+    {\normalfont\normalsize\bfseries}
+    {\thesubsubsection}{1em}{}
+
+% --- Odstavce --------------------------------------------------------
+\setlength{\parindent}{1.5em}
+\setlength{\parskip}{0.35em}
+
+% --- Seznamy ---------------------------------------------------------
+\setlist[itemize]{itemsep=0.2em, topsep=0.3em}
+\setlist[enumerate]{itemsep=0.2em, topsep=0.3em}
+
+% --- Věty, definice a důkazy -----------------------------------------
+% Číslují se společnou řadou v rámci sekce: čtenář pak podle čísla
+% pozná, kde v textu tvrzení hledat, bez ohledu na jeho druh.
+\theoremstyle{definition}
+\newtheorem{define}{%%THM_DEFINITION%%}[section]
+
+\theoremstyle{plain}
+\newtheorem{thm}[define]{%%THM_THEOREM%%}
+\newtheorem{lem}[define]{%%THM_LEMMA%%}
+\newtheorem{prop}[define]{%%THM_PROPOSITION%%}
+\newtheorem{cor}[define]{%%THM_COROLLARY%%}
+
+\theoremstyle{remark}
+\newtheorem{example}[define]{%%THM_EXAMPLE%%}
+\newtheorem{note}[define]{%%THM_NOTE%%}
+
+\renewcommand{\proofname}{%%THM_PROOF%%}
+
+% --- Popisky ---------------------------------------------------------
+\renewcommand{\algorithmcfname}{%%LABEL_ALGORITHM%%}
+\renewcommand{\lstlistingname}{%%LABEL_LISTING%%}

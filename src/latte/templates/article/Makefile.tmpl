@@ -1,0 +1,33 @@
+# =====================================================================
+# Překlad dokumentu
+#
+# Cíle jsou tenkou obálkou nad latexmk; skutečné nastavení je
+# v .latexmkrc. Výstup vzniká v build/.
+# =====================================================================
+
+MAIN    := main
+BUILD   := build
+LATEXMK := latexmk %%LATEXMK_FLAG%%
+
+.PHONY: all watch view clean distclean
+
+## Přeloží dokument.
+all:
+	$(LATEXMK) $(MAIN).tex
+
+## Překládá znovu při každé změně zdroje.
+watch:
+	$(LATEXMK) -pvc -view=none $(MAIN).tex
+
+## Otevře výsledné PDF.
+view: all
+	@xdg-open $(BUILD)/$(MAIN).pdf 2>/dev/null || open $(BUILD)/$(MAIN).pdf
+
+## Smaže pomocné soubory, PDF nechá.
+clean:
+	$(LATEXMK) -c
+
+## Smaže celý adresář s výstupem.
+distclean:
+	$(LATEXMK) -C
+	@rm -rf $(BUILD)

@@ -1,0 +1,116 @@
+% Colors
+
+\def\maincolR{0} % červená složka (0–255)
+\def\maincolG{83} % zelená složka
+\def\maincolB{120} % modrá složka
+\definecolor{maincolor}{HTML}{1E5B4B}
+
+% \pgfmathtruncatemacro{\authorfooterbgR}{1*\maincolR}
+% \pgfmathtruncatemacro{\authorfooterbgG}{1*\maincolG}
+% \pgfmathtruncatemacro{\authorfooterbgB}{1*\maincolB}
+% \definecolor{authorfooterbg}{RGB}{\authorfooterbgR,\authorfooterbgG,\authorfooterbgB}
+
+% \pgfmathtruncatemacro{\titlefooterbgR}{0.722*\maincolR}   
+% \pgfmathtruncatemacro{\titlefooterbgG}{0.974*\maincolG}   
+% \pgfmathtruncatemacro{\titlefooterbgB}{0.739*\maincolB}
+% \definecolor{titlefooterbg}{RGB}{\titlefooterbgR,\titlefooterbgG,\titlefooterbgB}
+
+% Beamer theme
+\colorlet{themecolor}{maincolor}
+\colorlet{authorfooterbg}{maincolor}
+\definecolor{titlefooterbg}{HTML}{7CA096}
+\definecolor{titlefooterfg}{HTML}{000000}
+\definecolor{titlepagebg}{HTML}{FFFFFF}   % podklad titulní strany
+\definecolor{datefooterbg}{HTML}{E3E3E3}
+\colorlet{titleframeboxcolor}{maincolor}
+
+% Background gradient
+\definecolor{gradMiddle}{RGB}{212,248,255}
+\definecolor{gradEnd}{RGB}{114,231,255}
+
+% Block theme
+\definecolor{blocktitlebg}{HTML}{F0DFA9}
+\definecolor{blocktitlefg}{HTML}{957300}
+\definecolor{blockbodybg}{HTML}{F5F0DF}
+
+\definecolor{alertblockbodybg}{HTML}{FFE4E4}
+\definecolor{alertblocktitlebg}{HTML}{ECA4A4}
+\definecolor{alertblocktitlefg}{HTML}{B11313}
+
+\definecolor{exampleblockbodybg}{HTML}{DAF0DA}
+\definecolor{exampleblocktitlebg}{HTML}{BBE0BB}
+\definecolor{exampleblocktitlefg}{HTML}{257A25}
+
+\definecolor{mathfg}{HTML}{00185E}
+
+\colorlet{bulletbg}{maincolor}
+% \definecolor{bulletbg}{HTML}{}
+
+% Beamer theme
+\usetheme{Madrid}
+\usecolortheme{seahorse}
+% \useoutertheme[subsection=false]{miniframes}
+
+\usecolortheme[named=themecolor]{structure}
+\setbeamertemplate{frame numbering}[fraction]
+\setbeamertemplate{navigation symbols}{}
+\setbeamercovered{invisible}
+
+% Header/footer
+\setbeamercolor{author in head/foot}{bg=authorfooterbg,fg=white}
+\setbeamercolor{title in head/foot}{bg=titlefooterbg,fg=titlefooterfg}
+\setbeamercolor{date in head/foot}{bg=datefooterbg,fg=black}
+% \setbeamercolor{title}{bg=datefooterbg}
+\setbeamerfont{title}{series=\bfseries}
+\setbeamercolor{frametitle}{bg=datefooterbg}
+% \setbeamercolor{section in head/foot}{bg=red,fg=cyan}
+% \setbeamercolor{subsection in head/foot}{bg=blue,fg=yellow}
+
+% Table of contents
+\setbeamercolor{section in toc}{fg=black}
+\setbeamercolor{subsection in toc}{fg=red}
+\setbeamercolor{section number projected}{fg=black}
+
+% Blocks
+% Ploché bloky bez zaoblení a stínu -- definice, věty, tvrzení i příklady
+% tak splývají se sazbou snímku a nepůsobí jako vystouplé "bubliny".
+\setbeamertemplate{blocks}[default]
+
+\setbeamercolor{block title}{bg=blocktitlebg, fg=blocktitlefg}
+\setbeamercolor{block body}{parent=normal text,use=block title,bg=blockbodybg}
+
+\setbeamercolor{block body alerted}{bg=alertblockbodybg}
+\setbeamercolor{block title alerted}{bg=alertblocktitlebg,fg=alertblocktitlefg}
+
+\setbeamercolor{block body example}{bg=exampleblockbodybg}
+\setbeamercolor{block title example}{bg=exampleblocktitlebg,fg=exampleblocktitlefg}
+
+% Math
+\setbeamercolor{math text}{fg=mathfg}
+
+% Itemize a enumerate
+\setbeamertemplate{itemize items}[circle]
+\setbeamertemplate{enumerate items}[circle]
+\setbeamercolor{itemize item}{fg=bulletbg,bg=white}
+\setbeamercolor{itemize subitem}{fg=bulletbg,bg=white}
+\setbeamercolor{itemize subsubitem}{fg=bulletbg,bg=white}
+
+\setbeamertemplate{enumerate items}[circle]
+\setbeamercolor{item projected}{bg=bulletbg}
+
+% U snímků s allowframebreaks se dovětek přidává až od druhého snímku, aby se
+% u jednostránkového seznamu zdrojů nezobrazovalo "Zdroje I".
+\setbeamertemplate{frametitle continuation}{%
+    \ifnum\insertcontinuationcount>1\relax\ (pokračování)\fi
+}
+
+% Bibliografie
+% Místo ikony Beameru se u položky seznamu zdrojů sází její pořadové číslo.
+\setbeamertemplate{bibliography item}[text]
+\setbeamercolor{bibliography item}{fg=black}
+\setbeamercolor{bibliography entry author}{fg=black}
+\setbeamercolor{bibliography entry title}{fg=black}
+\setbeamercolor{bibliography entry location}{fg=black}
+\setbeamercolor{bibliography entry note}{fg=black}
+
+% Titulní strana je definovaná v souboru titlepage.tex.

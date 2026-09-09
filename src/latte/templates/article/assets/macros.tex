@@ -1,0 +1,113 @@
+% =====================================================================
+% Vlastní makra
+%
+% Soubor předpokládá balíčky z packages.tex a barvy ze style.tex.
+% =====================================================================
+
+% --- Zvýrazňování ----------------------------------------------------
+\newcommand{\markred}[1]{\textcolor{lightred}{#1}}
+\newcommand{\markdarkred}[1]{\textcolor{darkred}{#1}}
+\newcommand{\markgreen}[1]{\textcolor{darkgreen}{#1}}
+\newcommand{\markblue}[1]{\textcolor{lightblue}{#1}}
+\newcommand{\markdarkblue}[1]{\textcolor{darkblue}{#1}}
+
+\newcommand{\cmark}{\markgreen{\ding{51}}}
+\newcommand{\xmark}{\markred{\ding{55}}}
+
+% Poznámka pro autora. Ve výsledném textu je červená, aby nešla přehlédnout.
+\newcommand{\todo}[1]{\textcolor{darkred}{\textbf{(TODO: #1)}}}
+
+% --- Číselné množiny a základní značení ------------------------------
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+
+\renewcommand{\emptyset}{\varnothing}
+
+\newcommand{\set}[1]{\left\{#1\right\}}
+\newcommand{\powset}{\mathcal{P}}
+\newcommand{\code}[1]{\langle#1\rangle}
+\newcommand{\T}[1]{#1^\top}                    % transpozice
+\newcommand{\compl}[1]{#1^\complement}         % doplněk
+\newcommand{\mapping}[3]{#1\colon #2 \rightarrow #3}
+\newcommand{\mapto}[3]{#1\colon #2 \mapsto #3}
+\newcommand{\bigO}{\mathcal{O}}
+% Jméno \binary si zabírá newtxmath i newpxmath, proto \binrep.
+\newcommand{\binrep}[1]{\ensuremath{\left\langle #1\right\rangle}_B}
+
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator{\mspan}{span}
+\DeclareMathOperator{\mrank}{rank}
+\DeclareMathOperator{\id}{id}
+\DeclareMathOperator{\dom}{dom}
+\DeclareMathOperator{\rng}{rng}
+
+% --- Statistika ------------------------------------------------------
+\newcommand{\average}[1]{\overline{#1}}
+\DeclareMathOperator{\median}{med}
+\DeclareMathOperator{\Var}{var}
+\DeclareMathOperator{\Cov}{cov}
+\DeclareMathOperator{\MSE}{MSE}
+\DeclareMathOperator{\SSE}{SSE}
+
+% --- Obrázky ---------------------------------------------------------
+% Obrázek na střed s popiskem a návěštím. Výška se omezuje shora, aby
+% se ani vysoký obrázek nevytlačil na vlastní stranu.
+% #1 = maximální výška (volitelně), #2 = soubor, #3 = popisek, #4 = label
+\newcommand{\obrazek}[4][0.45\textheight]{%
+    \begin{figure}[H]
+        \centering
+        \includegraphics[max height=#1, max width=\textwidth]{#2}
+        \caption{#3}
+        \label{#4}
+    \end{figure}%
+}
+
+% Ikona sázená do řádku textu, zarovnaná na účaří.
+\newcommand{\icon}[1]{%
+    \raisebox{-0.15\height}{\includegraphics[height=1em]{#1}}%
+}
+
+% --- Rámečky ---------------------------------------------------------
+% Čtyři úrovně důrazu se stejnou sazbou, liší se jen barvou a titulkem.
+% Rámečky jsou breakable -- delší poznámka se přelije na další stranu
+% místo toho, aby přetekla přes okraj.
+\newtcolorbox{lattebox}[2]{
+    enhanced,
+    breakable,
+    colback=#1!5!white,
+    colframe=#1,
+    coltitle=white,
+    fonttitle=\bfseries,
+    title=#2,
+    boxrule=0.8pt,
+    arc=2pt,
+    left=6pt, right=6pt, top=5pt, bottom=5pt,
+}
+
+\newenvironment{noticebox}[1][]{\begin{lattebox}{noticecolor}{#1}}{\end{lattebox}}
+\newenvironment{infobox}[1][]{\begin{lattebox}{infocolor}{#1}}{\end{lattebox}}
+\newenvironment{importantbox}[1][]{\begin{lattebox}{importantcolor}{#1}}{\end{lattebox}}
+\newenvironment{alertbox}[1][]{\begin{lattebox}{alertcolor}{#1}}{\end{lattebox}}
+
+% --- Rozhodovací problém ---------------------------------------------
+% Ustálený zápis "vstup / otázka" používaný u rozhodovacích problémů.
+% #1 = název, #2 = vstup, #3 = otázka
+\newcommand{\decproblem}[3]{%
+    \begin{center}
+        \begin{tcolorbox}[
+            enhanced, breakable, width=0.9\textwidth,
+            colback=importantcolor!5!white, colframe=importantcolor,
+            coltitle=white, fonttitle=\bfseries, title={#1},
+        ]
+            \renewcommand{\arraystretch}{1.4}%
+            \begin{tabularx}{\linewidth}{@{}l X@{}}
+                \textbf{Vstup:} & #2 \\
+                \textbf{Otázka:} & #3 \\
+            \end{tabularx}
+        \end{tcolorbox}
+    \end{center}%
+}

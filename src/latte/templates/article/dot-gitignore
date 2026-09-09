@@ -1,0 +1,61 @@
+# Výstup překladu -- latexmk sem odkládá vše včetně PDF.
+build/
+
+## Pomocné soubory LaTeXu (pro případ překladu mimo build/)
+*.aux
+*.fdb_latexmk
+*.fls
+*.log
+*.lof
+*.lot
+*.out
+*.toc
+*.synctex.gz
+*.synctex(busy)
+*.pdfsync
+
+## Bibliografie
+*.bbl
+*.bcf
+*.blg
+*-blx.aux
+*-blx.bib
+*.run.xml
+
+## Rejstřík a glosář
+*.acn
+*.acr
+*.alg
+*.glg
+*.glo
+*.gls
+*.glsdefs
+*.idx
+*.ilg
+*.ind
+*.ist
+
+## Balíčky
+# beamer
+*.nav
+*.snm
+*.vrb
+# algorithms
+*.loa
+# amsthm
+*.thm
+# listings
+*.lol
+# pdfx
+*.xmpi
+
+## Výsledné PDF do repozitáře nepatří, obrázková PDF ano.
+*.pdf
+!figures/**/*.pdf
+!images/**/*.pdf
+
+## Editory a systém
+*.swp
+*~
+.DS_Store
+Thumbs.db

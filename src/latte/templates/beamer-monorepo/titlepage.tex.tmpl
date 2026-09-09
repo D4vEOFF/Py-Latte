@@ -1,0 +1,125 @@
+% =====================================================================
+% Titulní strana prezentací
+%
+% Stranu dělí šikmá hrana: horní barevná plocha nese název předmětu
+% a téma přednášky, spodní světlá část autora, kontakt, instituci,
+% školní rok a logo.
+%
+% Šablona není vázaná na konkrétní předmět -- všechny údaje se berou
+% z příkazů \title, \subtitle, \author, \email, \institute, \date
+% a z makra \schoollogo.
+% =====================================================================
+
+\makeatletter
+\@ifundefined{presentationtitlefooter}{%
+  \let\presentationtitlefooter\presentationtitle
+}{}
+\makeatother
+
+% Název předmětu lze v konkrétní prezentaci přepsat pomocí
+% \def\subjectname{...} před vložením tohoto souboru.
+\providecommand{\subjectname}{%%TITLE%%}
+% Cesta k logu (relativně ke složce prezentace). Prázdné jméno souboru
+% logo vynechá.
+\providecommand{\schoollogo}{}
+
+\title[\presentationtitlefooter]{\subjectname}
+\subtitle{\presentationtitle}
+\author{%%AUTHOR%%}
+\def\email{%%EMAIL%%}
+\institute{%%INSTITUTE%%}
+\date{%
+    \pgfmathsetmacro{\firstyear}{ifthenelse(\month<9, \year-1, \year)}%
+    \pgfmathsetmacro{\secondyear}{ifthenelse(\month<9, \year, \year+1)}%
+    \pgfmathtruncatemacro{\secondyearlasttwo}{mod(\secondyear,100)}%
+    \pgfmathprintnumber[fixed,precision=0,zerofill,1000 sep={}]{\firstyear}/%
+    \pgfmathprintnumber[fixed,precision=0,zerofill,1000 sep={}]{\secondyearlasttwo}%
+}
+
+% --- Pomocná makra ---------------------------------------------------
+
+% Vypnutí dělení slov -- na titulní straně působí rušivě. Kromě
+% penalizace je potřeba i \emergencystretch, jinak TeX slovo rozdělí
+% ve chvíli, kdy jinou přijatelnou sazbu nenajde.
+\newcommand{\tpnohyphen}{%
+    \hyphenpenalty=10000\exhyphenpenalty=10000%
+    \tolerance=9999\emergencystretch=3em\relax
+}
+
+% Téma přednášky. Pozor: \tpnohyphen musí být mimo skupinu s fontem --
+% parametry odstavce se čtou až při jeho ukončení. Nastavení
+% \hyphenchar na -1 dělení vypne i tam, kde by TeX jinak neměl jiné
+% řešení.
+\newcommand{\tptopic}[1]{%
+    \tpnohyphen
+    {\usebeamerfont{title}\Large
+     \hyphenchar\font=-1\relax
+     #1\par
+     \hyphenchar\font=`\-\relax}%
+}
+
+% Text sázený na barevném podkladu: matematika musí být bílá,
+% ne tmavě modrá.
+\newcommand{\tpinverse}{%
+    \tpnohyphen
+    \setbeamercolor{math text}{fg=white}%
+}
+
+% Školní rok. Čísla se sázejí v matematickém režimu, takže barvu je
+% nutné nastavit i pro "math text" -- jinak zůstanou tmavě modrá.
+% #1 = barva
+\newcommand{\tpdate}[1]{{\setbeamercolor{math text}{fg=#1}\color{#1}\insertdate}}
+
+% --- Titulní strana --------------------------------------------------
+
+% Vnější obrázek slouží pouze k umístění kresby do levého horního rohu
+% strany. Vlastní kresba je vnořený obrázek s vlastní soustavou
+% souřadnic: (0,0) je levý horní roh strany, (1,-1) pravý dolní.
+\begin{frame}[plain]
+    \begin{tikzpicture}[remember picture, overlay]
+      \node[anchor=north west, inner sep=0pt] at (current page.north west) {%
+        \begin{tikzpicture}[x=\paperwidth, y=\paperheight]
+            % Podklad
+            \fill[titlepagebg] (0,0) rectangle (1,-1);
+
+            % Světlejší doprovodný pruh podél šikmé hrany
+            \fill[titlefooterbg]
+                (0,-0.615) -- (1,-0.435) -- (1,-0.475) -- (0,-0.655) -- cycle;
+
+            % Barevná plocha se šikmou hranou
+            \fill[maincolor]
+                (0,0) -- (1,0) -- (1,-0.42) -- (0,-0.60) -- cycle;
+
+            % Název předmětu
+            \node[anchor=north west, white, font=\normalsize\bfseries\scshape,
+                  text width=0.80\paperwidth, align=left, inner sep=0pt]
+                at (0.09,-0.12) {\tpinverse\inserttitle};
+
+            % Téma přednášky
+            \node[anchor=north west, white, text width=0.70\paperwidth,
+                  align=left, inner sep=0pt]
+                at (0.09,-0.19) {\tpinverse\tptopic{\insertsubtitle}};
+
+            % Autor, kontakt, instituce
+            \node[anchor=south west, text width=0.55\paperwidth,
+                  align=left, inner sep=0pt]
+                at (0.09,-0.84) {%
+                    {\usebeamerfont{author}\insertauthor\par}%
+                    \ifdefempty{\email}{}{{\small\texttt{\email}\par}}%
+                    \vskip0.5em
+                    {\small\insertinstitute\par}%
+                };
+
+            % Školní rok
+            \node[anchor=south west, font=\small, inner sep=0pt]
+                at (0.09,-0.91) {\tpdate{black}};
+
+            % Logo
+            \ifdefempty{\schoollogo}{}{%
+                \node[anchor=south east, inner sep=0pt]
+                    at (0.91,-0.90)
+                    {\includegraphics[width=0.14\paperwidth]{\schoollogo}};%
+            }
+        \end{tikzpicture}};
+    \end{tikzpicture}%
+\end{frame}

@@ -1,0 +1,77 @@
+% =====================================================================
+% Balíčky
+%
+% Soubor obsahuje pouze \usepackage. Vlastní nastavení balíčků žije ve
+% style.tex, aby se dalo měnit bez zásahu do pořadí načítání.
+% =====================================================================
+
+% --- Kódování a jazyk ------------------------------------------------
+%%ENCODING_SETUP%%
+%%BABEL_SETUP%%
+
+% --- Font: %%FONT_LABEL%% ---
+%%FONT_SETUP%%
+
+% --- Sazba stránky ---------------------------------------------------
+\usepackage{geometry}
+\usepackage{fancyhdr}
+\usepackage{indentfirst}
+\usepackage{multicol}
+\usepackage{float}
+\usepackage{titlesec}
+
+% --- Matematika ------------------------------------------------------
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{mathtools}
+\usepackage{cancel}
+%%MATHFONT_SETUP%%
+
+% --- Obrázky a grafika -----------------------------------------------
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage[export]{adjustbox}
+\usepackage{tikz}
+\usetikzlibrary{
+    arrows.meta,
+    calc,
+    positioning,
+    shapes.geometric,
+    shapes.callouts,
+    patterns,
+    shadows.blur,
+}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+
+% --- Tabulky ---------------------------------------------------------
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{makecell}    % zalomení uvnitř buňky
+\usepackage{colortbl}    % barvení buněk
+
+% --- Barvy a boxy ----------------------------------------------------
+\usepackage{xcolor}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins, breakable}
+\usepackage{varwidth}    % boxy přizpůsobené šířce obsahu
+
+% --- Algoritmy a zdrojový kód ----------------------------------------
+\usepackage[linesnumbered, ruled, vlined]{algorithm2e}
+\usepackage{listings}
+
+% --- Seznamy a drobnosti ---------------------------------------------
+\usepackage{enumitem}
+\usepackage{pifont}      % \ding -- fajfky a křížky
+\usepackage{soul}        % \hl, \ul
+\usepackage{etoolbox}    % \ifdefempty a spol.
+
+% hyperref se načítá až za většinou balíčků, protože předefinovává
+% množství vnitřních příkazů.
+\usepackage{hyperref}
+
+% --- Bibliografie ----------------------------------------------------
+% Citace podle ČSN ISO 690 (balíček biblatex-iso690).
+\usepackage[backend=biber, style=iso-numeric, sorting=none, maxnames=10]{biblatex}
+\addbibresource{%%ASSETS%%/literatura.bib}
