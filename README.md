@@ -91,15 +91,27 @@ v `sections/`, obrázky v `figures/`.
 ```
 main.tex
 assets/    packages.tex  style.tex  macros.tex  listing.tex
-           titlepage.tex  literatura.bib
+           header.tex  titlepage.tex  literatura.bib
 sections/  01-uvod.tex
 figures/
 .latexmkrc  Makefile  .vscode/settings.json  .gitignore  README.md
 ```
 
-Obsahuje titulní stranu se šikmou hranou, věty a definice se společným
-číslováním, čtyři úrovně barevných rámečků, sazbu zdrojového kódu
-a citace podle ČSN ISO 690 (biblatex-iso690).
+Hlavičku sází standardní `\maketitle`: název, autor a `\today`. E-mail
+a instituci z konfigurace drží makra `\latteemail` a `\latteinstitute`
+v `assets/header.tex`; pod jméno autora je přidají přepínače v `main.tex`:
+
+```latex
+\headeremailtrue        % e-mail pod jméno
+\headerinstitutetrue    % instituce pod jméno
+```
+
+Místo hlavičky lze vysázet titulní stranu se šikmou hranou -- v `main.tex`
+stačí místo `\maketitle` vložit `\input{assets/titlepage.tex}`.
+
+Dál obsahuje věty a definice se společným číslováním, čtyři úrovně
+barevných rámečků, sazbu zdrojového kódu a citace podle ČSN ISO 690
+(biblatex-iso690).
 
 ### `beamer-monorepo`
 
@@ -118,7 +130,8 @@ Další prezentaci přidá `latte add <jméno>`; `make` přeloží všechny,
 
 ## Fonty
 
-Výchozí je **Computer Modern**, tedy font, který LaTeX používá sám od sebe.
+Výchozí je **Times** (`newtxtext` + `newtxmath`); `cm` vrátí Computer
+Modern, tedy font, který LaTeX používá sám od sebe.
 
 ```
 cm  lmodern  libertinus  times  palatino  pxfonts  charter
@@ -147,6 +160,23 @@ Soubor:
 
 * Linux, macOS -- `~/.config/latte/config.toml`
 * Windows -- `%APPDATA%\latte\config.toml`
+
+Je to TOML, textové hodnoty tedy patří do uvozovek:
+
+```toml
+template = "article"
+documentclass = ""          # prázdné = třída podle šablony
+lang = "czech"
+engine = "pdflatex"
+font = "times"
+editor = "code"
+open_editor = true
+git_init = true
+projects_dir = ""
+author = "Jméno Příjmení"
+email = "jmeno@example.com"
+institute = ""
+```
 
 ## Vlastní šablony
 

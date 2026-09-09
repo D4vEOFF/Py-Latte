@@ -13,14 +13,27 @@
 \input{%%ASSETS%%/style.tex}
 \input{%%ASSETS%%/macros.tex}
 \input{%%ASSETS%%/listing.tex}
+\input{%%ASSETS%%/header.tex}
 
+% --- Hlavička --------------------------------------------------------
 \title{%%TITLE%%}
-\author{%%AUTHOR%%}
+% \lattecontact přidá pod jméno údaje zapnuté níže.
+\author{%%AUTHOR%%\lattecontact}
 \date{\today}
+
+% E-mail a instituce z konfigurace latte. Hodnoty drží makra
+% \latteemail a \latteinstitute v assets/header.tex, přepnutím na
+% ...true se dostanou i do hlavičky.
+\headeremailfalse
+\headerinstitutefalse
 
 \begin{document}
 
-\input{%%ASSETS%%/titlepage.tex}
+\maketitle
+
+% Místo hlavičky lze vysázet titulní stranu se šikmou hranou. Kontakt
+% a instituci sází sama, přepínače výše pak nechte vypnuté:
+%   \input{%%ASSETS%%/titlepage.tex}
 
 \tableofcontents
 \clearpage

@@ -39,7 +39,7 @@ PRESETS = {
     for p in [
         FontPreset(
             key="cm",
-            label="Computer Modern (výchozí font LaTeXu)",
+            label="Computer Modern (základní font LaTeXu)",
             pdftex=[],
             otf_main="Latin Modern Roman",
             otf_math="Latin Modern Math",
@@ -69,7 +69,13 @@ PRESETS = {
         FontPreset(
             key="times",
             label="Times (newtx)",
-            pdftex_math=[r"\usepackage{newtxtext,newtxmath}"],
+            # newtxtext je textový font, sám o sobě by mohl přijít dřív.
+            # Načítá se ale spolu s newtxmath, aby dvojice zůstala
+            # pohromadě -- newtxmath musí být až za amsmath.
+            pdftex_math=[
+                r"\usepackage{newtxtext}",
+                r"\usepackage{newtxmath}",
+            ],
             provides_math=True,
             otf_main="TeX Gyre Termes",
             otf_math="TeX Gyre Termes Math",
@@ -128,7 +134,8 @@ PRESETS = {
     ]
 }
 
-DEFAULT_FONT = "cm"
+#: Výchozí font nových projektů: newtxtext + newtxmath.
+DEFAULT_FONT = "times"
 
 
 def resolve(name: str, engine: str) -> FontPreset:

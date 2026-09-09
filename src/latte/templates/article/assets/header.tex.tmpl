@@ -1,0 +1,30 @@
+% =====================================================================
+% Hlavička dokumentu
+%
+% Údaje z konfigurace latte drží makra, aby se daly použít i mimo
+% hlavičku -- v patičce, v tiráži, na titulní straně. Co se z nich
+% dostane do hlavičky, řídí přepínače v main.tex.
+% =====================================================================
+
+% --- Údaje z konfigurace ---------------------------------------------
+\newcommand{\latteemail}{%%EMAIL%%}
+\newcommand{\latteinstitute}{%%INSTITUTE%%}
+
+% --- Přepínače -------------------------------------------------------
+% Výchozí stav se nastavuje v main.tex, tady přepínače pouze vznikají.
+\newif\ifheaderemail
+\newif\ifheaderinstitute
+
+% --- Doplňky pod jméno autora ----------------------------------------
+% \maketitle sází autora z \author, kam se \lattecontact vkládá
+% v main.tex. Rozvine se až při sazbě hlavičky, na pořadí \author
+% a přepínačů proto nezáleží. Prázdný údaj se vynechá i při zapnutém
+% přepínači, aby v hlavičce nezůstal prázdný řádek.
+\newcommand{\lattecontact}{%
+    \ifheaderinstitute
+        \ifdefempty{\latteinstitute}{}{\\ \small\latteinstitute}%
+    \fi
+    \ifheaderemail
+        \ifdefempty{\latteemail}{}{\\ \small\texttt{\latteemail}}%
+    \fi
+}

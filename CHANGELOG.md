@@ -5,6 +5,24 @@ Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.1.0/),
 
 ## [Nezveřejněno]
 
+### Změněno
+
+- Výchozím fontem je **Times** (`newtxtext` + `newtxmath`) místo
+  Computer Modern. Původní chování vrátí `latte config set font cm`.
+- Šablona **article** sází hlavičku standardním `\maketitle` (název,
+  autor, `\today`). Titulní strana se šikmou hranou zůstává jako
+  nepovinná náhrada: `\input{assets/titlepage.tex}` místo `\maketitle`.
+- `latte config show` vypisuje platné TOML, tedy i uvozovky kolem
+  textových hodnot -- výpis šlo zkopírovat do `config.toml`, kde pak
+  nešel načíst. Chyba v konfiguraci na uvozovky nově upozorní.
+
+### Přidáno
+
+- `assets/header.tex` v šabloně **article**: makra `\latteemail`
+  a `\latteinstitute` s hodnotami z konfigurace a přepínače
+  `\headeremail`/`\headerinstitute`, kterými se údaje zařadí pod jméno
+  autora v hlavičce.
+
 ## [0.1.0] -- 2026-09-09
 
 První vydání.

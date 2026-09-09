@@ -1,14 +1,16 @@
 % =====================================================================
 % Titulní strana
 %
+% Nepovinná náhrada standardní hlavičky: vkládá se z main.tex místo
+% \maketitle.
+%
 % Stranu dělí šikmá hrana: horní barevná plocha nese název dokumentu,
 % spodní světlá část autora, kontakt a instituci. Text se bere z \title
-% a \author zadaných v main.tex, kontakt z maker \email a \institute --
-% soubor se tedy kvůli jinému dokumentu nemusí upravovat.
+% a \author zadaných v main.tex, kontakt z maker \latteemail
+% a \latteinstitute (assets/header.tex) -- soubor se tedy kvůli jinému
+% dokumentu nemusí upravovat. Přepínače \headeremail a \headerinstitute
+% nechte vypnuté, kontakt sází tahle strana sama.
 % =====================================================================
-
-\providecommand{\email}{%%EMAIL%%}
-\providecommand{\institute}{%%INSTITUTE%%}
 
 % \@title a spol. jsou vnitřní příkazy třídy, proto \makeatletter.
 \makeatletter
@@ -42,9 +44,9 @@
                     at (0.09,-0.86)
                     {%
                         {\large\bfseries\latteinsertauthor\par}%
-                        \ifdefempty{\email}{}{{\small\texttt{\email}\par}}%
+                        \ifdefempty{\latteemail}{}{{\small\texttt{\latteemail}\par}}%
                         \vskip0.6em
-                        \ifdefempty{\institute}{}{{\small\institute\par}}%
+                        \ifdefempty{\latteinstitute}{}{{\small\latteinstitute\par}}%
                     };
 
                 % Datum

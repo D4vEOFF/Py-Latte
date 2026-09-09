@@ -14,7 +14,8 @@ Anglicky zůstávají jen názvy balíčků, příkazů a proměnných.
 src/latte/
   cli.py         argparse, podpříkazy, interaktivní režim
   config.py      TOML konfigurace, výchozí hodnoty, validace
-  fonts.py       fontové presety, dělení preambule na textovou a matematickou část
+  fonts.py       fontové presety (výchozí `times` = newtx), dělení preambule
+                 na textovou a matematickou část
   langs.py       jazyky, babel, názvy vět a popisků
   templates.py   hledání šablon, dosazování symbolů, kopírování stromu
   project.py     sestavení kontextu, zakládání projektu, `latte add`
@@ -65,6 +66,21 @@ Důvody:
 - `unicode-math` se musí načíst až za `amsmath` a nesnese `amssymb`.
 - `newtxmath` i `newpxmath` definují `\binary`. Makro šablony se proto
   jmenuje `\binrep`.
+
+## Hlavička v šabloně article
+
+Hlavičku sází `\maketitle`. Údaje, které v ní být nemusí, drží makra
+v `assets/header.tex` (`\latteemail`, `\latteinstitute`) a zařazují je
+přepínače `\newif` nastavené v `main.tex`. Do hlavičky se dostanou
+přes `\lattecontact` v `\author{...}` -- rozvine se až při sazbě, na
+pořadí `\author` a přepínačů proto nezáleží.
+
+Prázdný údaj `\lattecontact` vynechá i při zapnutém přepínači, jinak by
+v hlavičce zůstal prázdný řádek. Kdo přidá další údaj, přidává ho na
+třech místech: makro a větev v `header.tex`, přepínač v `main.tex`.
+
+`assets/titlepage.tex` je nepovinná náhrada hlavičky. Kontakt sází sama
+z týchž maker, takže s ní mají přepínače zůstat vypnuté.
 
 ## Testy
 
