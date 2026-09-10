@@ -17,7 +17,9 @@
 
 % --- Barevná paleta --------------------------------------------------
 % Jediná barva, ze které se odvozuje zbytek dokumentu. Změnou tohoto
-% řádku se přebarví nadpisy, odkazy i rámečky.
+% řádku se přebarví odkazy, linka pod záhlavím i titulní strana.
+% Text a nadpisy barvu nedědí -- sázejí se černě, jak je v LaTeXu
+% zvykem.
 \definecolor{maincolor}{HTML}{1E5B4B}
 
 \definecolor{accentcolor}{HTML}{7CA096}
@@ -69,11 +71,13 @@
 }
 
 % --- Nadpisy ---------------------------------------------------------
+% Nadpisy se od běžného textu liší jen velikostí a řezem, barvu nemají
+% -- zůstává výchozí černá.
 \titleformat{\section}
-    {\normalfont\Large\bfseries\color{maincolor}}
+    {\normalfont\Large\bfseries}
     {\thesection}{1em}{}
 \titleformat{\subsection}
-    {\normalfont\large\bfseries\color{maincolor}}
+    {\normalfont\large\bfseries}
     {\thesubsection}{1em}{}
 \titleformat{\subsubsection}
     {\normalfont\normalsize\bfseries}
