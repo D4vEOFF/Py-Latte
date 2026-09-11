@@ -30,6 +30,15 @@ Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.1.0/),
   `headheight` a `fancyhdr` u každé stránky hlásil `\headheight is too
   small (14.0pt)`. Linka je nově `\hrule`, jak ji sází i výchozí
   definice ve fancyhdr, a drží se pod textem záhlaví.
+- `install.ps1` hlásil `Nenašel jsem Python` i na počítači, kde Python
+  byl. Hledal ho jen v PATH a zároveň zahazoval všechno z `WindowsApps`,
+  takže mu Python z Microsoft Store vždy propadl -- v PATH je totiž
+  právě jen jako zástupce v tomto adresáři. Nově se prochází launcher
+  `py`, PATH, balíčky Pythonu z Microsoft Store, registr a obvyklé
+  adresáře instalace; zástupce, který bez nainstalovaného balíčku jen
+  otevře obchod, se nespouští. Chybová hláška zmiňuje `-Python`.
+- `install.ps1` neměl BOM, takže ho Windows PowerShell četl v systémovém
+  kódování a všechny hlášky vypisoval s rozsypanou diakritikou.
 
 ## [0.1.0] -- 2026-09-09
 
