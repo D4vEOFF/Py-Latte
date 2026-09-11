@@ -39,6 +39,19 @@ Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.1.0/),
   otevře obchod, se nespouští. Chybová hláška zmiňuje `-Python`.
 - `install.ps1` neměl BOM, takže ho Windows PowerShell četl v systémovém
   kódování a všechny hlášky vypisoval s rozsypanou diakritikou.
+- `install.ps1` zapisoval uživatelskou PATH přes
+  `[Environment]::SetEnvironmentVariable`, které hodnotu uloží jako
+  `REG_SZ`. Tím ze všech ostatních položek zmizelo rozvíjení
+  `%PROMĚNNÝCH%` -- z `%USERPROFILE%\bin` se stal nefunkční text. PATH se
+  nově zapisuje do registru jako `REG_EXPAND_SZ` a po zápisu se rozešle
+  `WM_SETTINGCHANGE`, aby si Průzkumník změnu převzal.
+- Adresář se lišil jen koncovým zpětným lomítkem nebo velikostí písmen
+  a `install.ps1` ho do PATH přidal podruhé; odinstalace ho pak nenašla.
+- Hláška o změně PATH tvrdila, že stačí nové okno terminálu. Windows
+  Terminal a VS Code si ale prostředí drží od svého spuštění, takže nová
+  karta běží pořád se starou PATH. Skript nově říká, že je potřeba
+  restartovat celý program, a vypíše příkaz, kterým si lze cestu doplnit
+  ve stávajícím okně.
 
 ## [0.1.0] -- 2026-09-09
 

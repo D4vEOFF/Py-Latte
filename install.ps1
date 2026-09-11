@@ -102,20 +102,82 @@ function Invoke-Uninstall {
 
 # --- PATH ------------------------------------------------------------
 
+# Oznámení o změně prostředí. Bez něj si Průzkumník drží starou PATH
+# a předává ji každému programu, který z něj uživatel spustí -- včetně
+# terminálů otevřených dlouho po instalaci.
+function Publish-EnvironmentChange {
+    if (-not ('Latte.NativeMethods' -as [type])) {
+        $signature = @'
+[DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+public static extern IntPtr SendMessageTimeout(IntPtr hWnd, uint Msg, UIntPtr wParam,
+    string lParam, uint fuFlags, uint uTimeout, out UIntPtr lpdwResult);
+'@
+        try {
+            Add-Type -MemberDefinition $signature -Name 'NativeMethods' `
+                -Namespace 'Latte' -ErrorAction Stop | Out-Null
+        }
+        catch { return }
+    }
+
+    $HWND_BROADCAST   = [IntPtr]0xffff
+    $WM_SETTINGCHANGE = 0x1a
+    $SMTO_ABORTIFHUNG = 0x0002
+    $answer = [UIntPtr]::Zero
+    try {
+        [void][Latte.NativeMethods]::SendMessageTimeout($HWND_BROADCAST, $WM_SETTINGCHANGE,
+            [UIntPtr]::Zero, 'Environment', $SMTO_ABORTIFHUNG, 5000, [ref]$answer)
+    }
+    catch { }
+}
+
+# Porovnání cest bez ohledu na velikost písmen a koncové zpětné lomítko,
+# aby se stejný adresář nepřidal dvakrát a odinstalace ho našla.
+function Test-SamePath {
+    param([string]$Left, [string]$Right)
+    return $Left.TrimEnd('\') -eq $Right.TrimEnd('\')
+}
+
 function Get-UserPath {
-    $value = [Environment]::GetEnvironmentVariable('Path', 'User')
-    if ($null -eq $value) { return @() }
-    return $value.Split(';') | Where-Object { $_ -ne '' }
+    $key = [Microsoft.Win32.Registry]::CurrentUser.OpenSubKey('Environment')
+    if (-not $key) { return @() }
+    try {
+        # Nerozvinutá podoba: jinak by se z %USERPROFILE%\bin při zápisu
+        # stala napevno zapsaná cesta.
+        $value = $key.GetValue('Path', '',
+            [Microsoft.Win32.RegistryValueOptions]::DoNotExpandEnvironmentNames)
+    }
+    finally { $key.Close() }
+
+    if (-not $value) { return @() }
+    return @($value.Split(';') | Where-Object { $_ -ne '' })
+}
+
+function Set-UserPath {
+    param([string[]]$Entries)
+
+    $key = [Microsoft.Win32.Registry]::CurrentUser.OpenSubKey('Environment', $true)
+    if (-not $key) { Stop-WithError 'Nepodařilo se otevřít uživatelské proměnné prostředí.' }
+    try {
+        # REG_EXPAND_SZ, ne REG_SZ: [Environment]::SetEnvironmentVariable
+        # zapisuje prostý text a tím zruší rozvíjení %PROMĚNNÝCH%
+        # u všech ostatních položek PATH.
+        $key.SetValue('Path', ($Entries -join ';'),
+            [Microsoft.Win32.RegistryValueKind]::ExpandString)
+    }
+    finally { $key.Close() }
+
+    Publish-EnvironmentChange
 }
 
 function Add-ToUserPath {
     param([string]$Directory)
 
     $entries = Get-UserPath
-    if ($entries -contains $Directory) { return $false }
+    foreach ($entry in $entries) {
+        if (Test-SamePath -Left $entry -Right $Directory) { return $false }
+    }
 
-    $updated = (@($entries) + $Directory) -join ';'
-    [Environment]::SetEnvironmentVariable('Path', $updated, 'User')
+    Set-UserPath -Entries (@($entries) + $Directory)
     # Aby příkaz fungoval i ve stávajícím okně.
     $env:Path = "$env:Path;$Directory"
     return $true
@@ -125,11 +187,25 @@ function Remove-FromUserPath {
     param([string]$Directory)
 
     $entries = Get-UserPath
-    if ($entries -notcontains $Directory) { return }
+    $kept = @($entries | Where-Object { -not (Test-SamePath -Left $_ -Right $Directory) })
+    if ($kept.Count -eq $entries.Count) { return }
 
-    $updated = ($entries | Where-Object { $_ -ne $Directory }) -join ';'
-    [Environment]::SetEnvironmentVariable('Path', $updated, 'User')
+    Set-UserPath -Entries $kept
     Write-Ok "$Directory odebrán z PATH"
+}
+
+# Změnu PATH si nový proces přečte z registru, ale prostředí dědí po tom,
+# kdo ho spustil. Windows Terminal ani VS Code si prostředí po oznámení
+# neobnovují, takže nová karta v nich stále běží se starou PATH; pomůže
+# až restart celého programu.
+function Show-PathHint {
+    Write-Warn 'Změnu PATH uvidí až nově spuštěné programy.'
+    Write-Host '   Windows Terminal a VS Code si prostředí drží od svého startu,' -ForegroundColor DarkGray
+    Write-Host '   takže nová karta nestačí -- ukončete celý program a spusťte ho' -ForegroundColor DarkGray
+    Write-Host '   znovu. Ve stávajícím okně cestu doplní:' -ForegroundColor DarkGray
+    Write-Host ''
+    Write-Host "     `$env:Path += ';$BinDir'"
+    Write-Host ''
 }
 
 # --- Instalace -------------------------------------------------------
@@ -309,7 +385,14 @@ function Invoke-Install {
 
     if (Add-ToUserPath -Directory $BinDir) {
         Write-Ok "$BinDir přidán do PATH"
-        Write-Warn 'Nové okno terminálu změnu PATH uvidí, stávající nemusí.'
+        Show-PathHint
+    }
+    elseif (-not (Get-Command 'latte' -CommandType Application -ErrorAction SilentlyContinue)) {
+        # Adresář v PATH už zapsaný je, ale tento proces ho nevidí --
+        # uživatel narazí na totéž i v terminálu, který nové prostředí
+        # nedostal.
+        Publish-EnvironmentChange
+        Show-PathHint
     }
 
     & $exe '--version'
