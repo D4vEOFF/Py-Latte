@@ -157,7 +157,6 @@ class TestCreate(unittest.TestCase):
                 "assets/style.tex",
                 "assets/header.tex",
                 "assets/literatura.bib",
-                "sections/01-uvod.tex",
                 ".latte.toml",
             ]:
                 self.assertTrue((target / expected).is_file(), expected)
@@ -246,6 +245,78 @@ class TestHeader(unittest.TestCase):
             self.assertIn(r"\newcommand{\latteinstitute}{Ústav \& spol.}", header)
             self.assertIn(r"\newif\ifheaderemail", header)
             self.assertIn(r"\newif\ifheaderinstitute", header)
+
+
+class TestHeaderVolby(unittest.TestCase):
+    """Volby `header_*` řídí, co se v hlavičce vysází."""
+
+    def _main(self, **overrides) -> str:
+        template = templates.get("article")
+        with tempfile.TemporaryDirectory() as tmp:
+            target = Path(tmp) / "projekt"
+            project.create(template, target, _settings(**overrides))
+            return (target / "main.tex").read_text(encoding="utf-8")
+
+    def test_vypnuty_autor_a_datum_zmizi(self):
+        main = self._main(header_author=False, header_date=False)
+        self.assertIn(r"\author{}", main)
+        self.assertIn(r"\date{}", main)
+        self.assertNotIn(r"\date{\today}", main)
+
+    def test_zapnuty_kontakt_prepne_prepinace(self):
+        main = self._main(header_email=True, header_institute=True)
+        self.assertIn(r"\headeremailtrue", main)
+        self.assertIn(r"\headerinstitutetrue", main)
+
+    def test_vypnuty_obsah_nevlozi_tableofcontents(self):
+        self.assertNotIn(r"\tableofcontents", self._main(header_toc=False))
+        self.assertIn(r"\tableofcontents", self._main(header_toc=True))
+
+    def test_titulni_strana_nahradi_maketitle(self):
+        main = self._main(header_titlepage=True)
+        self.assertIn("\n\\input{assets/titlepage.tex}", main)
+        self.assertNotIn("\n\\maketitle", main)
+        # Kontakt sází titulní strana sama; přepínače by ho zopakovaly.
+        self.assertIn(r"\headeremailfalse", main)
+        self.assertIn(r"\author{Autor}", main)
+        self.assertNotIn(r"\author{Autor\lattecontact}", main)
+
+    def test_titulni_strana_prebije_zapnuty_kontakt(self):
+        main = self._main(
+            header_titlepage=True, header_email=True, header_institute=True
+        )
+        self.assertIn(r"\headeremailfalse", main)
+        self.assertIn(r"\headerinstitutefalse", main)
+
+    def test_marker_si_volby_pamatuje(self):
+        template = templates.get("article")
+        with tempfile.TemporaryDirectory() as tmp:
+            target = Path(tmp) / "projekt"
+            project.create(
+                template,
+                target,
+                _settings(header_toc=False, header_email=True),
+            )
+            _, loaded = project.find_root(target)
+            self.assertFalse(loaded.header_toc)
+            self.assertTrue(loaded.header_email)
+            self.assertTrue(loaded.header_author)
+
+    def test_volby_jsou_i_v_konfiguraci(self):
+        for flag in project.HEADER_FLAGS:
+            self.assertIn(flag, config.DEFAULTS, flag)
+            self.assertIn(flag, config.BOOL_KEYS, flag)
+
+
+class TestBezSekci(unittest.TestCase):
+    def test_article_nezaklada_sections(self):
+        template = templates.get("article")
+        with tempfile.TemporaryDirectory() as tmp:
+            target = Path(tmp) / "projekt"
+            project.create(template, target, _settings())
+            self.assertFalse((target / "sections").exists())
+            main = (target / "main.tex").read_text(encoding="utf-8")
+            self.assertNotIn("sections/", main)
 
 
 class TestLatexEscape(unittest.TestCase):

@@ -25,6 +25,11 @@ src/latte/
 tests/           unittest, bez závislostí
 ```
 
+`latte new` výchozí hodnoty nejdřív vypíše a zeptá se, jestli platí;
+odmítnutí spustí doptávání položku po položce. Na rouře (EOF) projde
+dotaz výchozí odpovědí, skripty a testy tedy běží beze změny -- proto
+`</dev/null` ve snippetu s překladem níže.
+
 ## Konvence šablon
 
 Šablona je adresář s `template.toml`. Platí dvě konvence:
@@ -77,7 +82,20 @@ pořadí `\author` a přepínačů proto nezáleží.
 
 Prázdný údaj `\lattecontact` vynechá i při zapnutém přepínači, jinak by
 v hlavičce zůstal prázdný řádek. Kdo přidá další údaj, přidává ho na
-třech místech: makro a větev v `header.tex`, přepínač v `main.tex`.
+čtyřech místech: makro a větev v `header.tex`, přepínač do
+`%%HEADER_SWITCHES%%` v `project.build_context()`, pole do
+`project.Settings` a `project.HEADER_FLAGS`, volbu do `config.DEFAULTS`
+a `config.BOOL_KEYS`.
+
+Co se v hlavičce vysází, řídí volby `header_*`. Do šablony se dostanou
+hotovými řádky (`%%AUTHOR_SETUP%%`, `%%DATE_SETUP%%`,
+`%%HEADER_SWITCHES%%`, `%%TITLE_SETUP%%`, `%%TOC_SETUP%%`), ne
+podmínkami -- dosazování symbolů žádné větvení neumí. Titulní strana
+sází kontakt sama, proto s `header_titlepage` vycházejí přepínače
+e-mailu a instituce vždy vypnuté.
+
+Tělo `main.tex` je prázdné záměrně: složku `sections/` šablona
+nezakládá, rozvržení textu si rozvrhne uživatel.
 
 `assets/titlepage.tex` je nepovinná náhrada hlavičky. Kontakt sází sama
 z týchž maker, takže s ní mají přepínače zůstat vypnuté.
@@ -93,7 +111,7 @@ se musí ověřit skutečným překladem**, jinak se chyba pozná až u uživate
 
 ```bash
 python3 -m venv /tmp/latte-venv && /tmp/latte-venv/bin/pip install -q .
-cd /tmp && /tmp/latte-venv/bin/latte zkouska --no-git --no-open -f <preset>
+cd /tmp && /tmp/latte-venv/bin/latte zkouska --no-git --no-open -f <preset> </dev/null
 cd zkouska && latexmk -pdf main.tex
 ```
 

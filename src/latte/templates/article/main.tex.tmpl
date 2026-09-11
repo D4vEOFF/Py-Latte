@@ -18,27 +18,25 @@
 % --- Hlavička --------------------------------------------------------
 \title{%%TITLE%%}
 % \lattecontact přidá pod jméno údaje zapnuté níže.
-\author{%%AUTHOR%%\lattecontact}
-\date{\today}
+%%AUTHOR_SETUP%%
+%%DATE_SETUP%%
 
 % E-mail a instituce z konfigurace latte. Hodnoty drží makra
 % \latteemail a \latteinstitute v assets/header.tex, přepnutím na
 % ...true se dostanou i do hlavičky.
-\headeremailfalse
-\headerinstitutefalse
+%%HEADER_SWITCHES%%
 
 \begin{document}
 
-\maketitle
+% Hlavička, nebo titulní strana se šikmou hranou
+% (\input{%%ASSETS%%/titlepage.tex}) -- ta sází kontakt a instituci
+% sama, přepínače výše pak mají zůstat vypnuté.
+%%TITLE_SETUP%%
 
-% Místo hlavičky lze vysázet titulní stranu se šikmou hranou. Kontakt
-% a instituci sází sama, přepínače výše pak nechte vypnuté:
-%   \input{%%ASSETS%%/titlepage.tex}
+%%TOC_SETUP%%
 
-\tableofcontents
-\clearpage
-
-\input{sections/01-uvod.tex}
+% Tady začíná vlastní text. Rozvržení do souborů je na vás --
+% co se rozroste, stačí přesunout stranou a vložit přes \input.
 
 \printbibliography[heading=bibintoc]
 
