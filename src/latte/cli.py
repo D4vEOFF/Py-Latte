@@ -240,6 +240,8 @@ def _resolve_settings(
         args.institute if args.institute is not None else str(values["institute"])
     )
 
+    header = {flag: bool(values[flag]) for flag in project.HEADER_FLAGS}
+
     if interactive:
         title = ui.ask("Název dokumentu", title)
         documentclass = ui.ask("Třída dokumentu", documentclass)
@@ -249,6 +251,24 @@ def _resolve_settings(
         author = ui.ask("Autor", author)
         email = ui.ask("E-mail", email)
         institute = ui.ask("Instituce", institute)
+
+        header["header_titlepage"] = ui.ask_bool(
+            "Titulní strana místo hlavičky", header["header_titlepage"]
+        )
+        header["header_author"] = ui.ask_bool(
+            "Vypsat autora", header["header_author"]
+        )
+        # Kontakt si titulní strana sází sama; ptát se na přepínače
+        # hlavičky by svádělo k tomu, že údaj vyjde dvakrát.
+        if not header["header_titlepage"]:
+            header["header_email"] = ui.ask_bool(
+                "Vypsat e-mail", header["header_email"]
+            )
+            header["header_institute"] = ui.ask_bool(
+                "Vypsat instituci", header["header_institute"]
+            )
+        header["header_date"] = ui.ask_bool("Vypsat datum", header["header_date"])
+        header["header_toc"] = ui.ask_bool("Vložit obsah", header["header_toc"])
 
     # Ověření dřív, než vznikne první soubor -- nechceme po sobě uklízet
     # polovinu rozbaleného projektu.
@@ -270,19 +290,66 @@ def _resolve_settings(
         email=email,
         institute=institute,
         title=title,
+        **header,
     )
     return template, slug, settings
 
 
+def _header_summary(settings: Settings) -> str:
+    """Co z hlavičky se vysází -- ve stejném pořadí jako dotazy."""
+    if settings.header_titlepage:
+        parts = ["titulní strana"]
+    else:
+        parts = ["hlavička"]
+    if settings.header_author:
+        parts.append("autor")
+    if settings.header_email and not settings.header_titlepage:
+        parts.append("e-mail")
+    if settings.header_institute and not settings.header_titlepage:
+        parts.append("instituce")
+    if settings.header_date:
+        parts.append("datum")
+    if settings.header_toc:
+        parts.append("obsah")
+    return ", ".join(parts)
+
+
+def _show_summary(
+    template: templates.Template,
+    settings: Settings,
+    target: Path,
+    *,
+    do_git: bool,
+    do_open: bool,
+    editor_command: str,
+) -> None:
+    rows = [
+        ("Adresář", str(target)),
+        ("Šablona", template.name),
+        ("Název dokumentu", settings.title),
+        ("Třída", f"{settings.documentclass} [{settings.class_options}]"),
+        ("Engine", settings.engine),
+        ("Font", settings.font),
+        ("Jazyk", settings.lang),
+        ("Autor", settings.author or ui.dim("--")),
+        ("E-mail", settings.email or ui.dim("--")),
+        ("Instituce", settings.institute or ui.dim("--")),
+        ("Hlavička", _header_summary(settings)),
+        ("git repozitář", "ano" if do_git else "ne"),
+        ("Otevřít v editoru", editor_command if do_open else "ne"),
+    ]
+    width = max(len(label) for label, _ in rows)
+    print(ui.bold("Nastavení nového projektu:"))
+    for label, value in rows:
+        print(f"  {label.ljust(width)}  {value}")
+
+
 def cmd_new(args: argparse.Namespace) -> int:
     values = config.load()
-    interactive = args.interactive or args.name is None
 
-    template, slug, settings = _resolve_settings(args, values, interactive)
-
-    parent_raw = args.dir or str(values["projects_dir"]) or "."
-    parent = Path(os.path.expanduser(parent_raw)).resolve()
-    target = parent / slug
+    def _target(slug: str) -> Path:
+        parent_raw = args.dir or str(values["projects_dir"]) or "."
+        return Path(os.path.expanduser(parent_raw)).resolve() / slug
 
     do_git = args.git_init if args.git_init is not None else bool(values["git_init"])
     do_open = (
@@ -290,9 +357,27 @@ def cmd_new(args: argparse.Namespace) -> int:
     )
     editor_command = args.editor or str(values["editor"])
 
+    # Bez jména projektu se stejně musíme doptat na všechno; jinak se
+    # nejdřív ukážou výchozí hodnoty a doptávání spustí teprve odmítnutí.
+    interactive = args.interactive or args.name is None
+    if not interactive:
+        template, slug, settings = _resolve_settings(args, values, False)
+        _show_summary(
+            template,
+            settings,
+            _target(slug),
+            do_git=do_git,
+            do_open=do_open,
+            editor_command=editor_command,
+        )
+        interactive = not ui.ask_bool("Použít tyto hodnoty", True)
+
     if interactive:
+        template, slug, settings = _resolve_settings(args, values, True)
         do_git = ui.ask_bool("Založit git repozitář", do_git)
         do_open = ui.ask_bool(f"Otevřít v editoru ({editor_command})", do_open)
+
+    target = _target(slug)
 
     created = project.create(template, target, settings, force=args.force)
 

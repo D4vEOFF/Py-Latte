@@ -39,9 +39,28 @@ DEFAULTS: "dict[str, object]" = {
     "author": "",
     "email": "",
     "institute": "",
+    # Co z údajů výše se má vysázet v hlavičce nového projektu.
+    # Přepisuje je dotaz při `latte new`, tohle jsou výchozí odpovědi.
+    "header_author": True,
+    "header_email": False,
+    "header_institute": False,
+    "header_date": True,
+    "header_toc": True,
+    # Titulní strana místo hlavičky. Kontakt sází sama, přepínače
+    # e-mailu a instituce proto zůstanou vypnuté.
+    "header_titlepage": False,
 }
 
-BOOL_KEYS = {"open_editor", "git_init"}
+BOOL_KEYS = {
+    "open_editor",
+    "git_init",
+    "header_author",
+    "header_email",
+    "header_institute",
+    "header_date",
+    "header_toc",
+    "header_titlepage",
+}
 
 
 def config_dir() -> Path:

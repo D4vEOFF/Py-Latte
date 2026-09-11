@@ -37,6 +37,16 @@ class Settings:
     email: str
     institute: str
     title: str
+    #: Co se vysází v hlavičce. Výchozí hodnoty drží konfigurace,
+    #: `latte new` se na ně ptá.
+    header_author: bool = True
+    header_email: bool = False
+    header_institute: bool = False
+    header_date: bool = True
+    header_toc: bool = True
+    #: Titulní strana místo \maketitle. Kontakt sází sama, přepínače
+    #: e-mailu a instituce proto zůstanou vypnuté.
+    header_titlepage: bool = False
 
 
 def slugify(name: str) -> str:
@@ -89,10 +99,40 @@ def build_context(
         settings.engine
     ]
 
+    # Titulní strana sází kontakt sama; přepínače hlavičky by týž údaj
+    # vysázely podruhé, proto se s ní nezapínají.
+    show_email = settings.header_email and not settings.header_titlepage
+    show_institute = settings.header_institute and not settings.header_titlepage
+
+    author = _latex_escape(settings.author)
+    if not settings.header_author:
+        author_setup = r"\author{}"
+    elif settings.header_titlepage:
+        author_setup = rf"\author{{{author}}}"
+    else:
+        author_setup = rf"\author{{{author}\lattecontact}}"
+
+    header_switches = "\n".join(
+        [
+            r"\headeremail" + ("true" if show_email else "false"),
+            r"\headerinstitute" + ("true" if show_institute else "false"),
+        ]
+    )
+
+    if settings.header_titlepage:
+        title_setup = rf"\input{{{assets_prefix}/titlepage.tex}}"
+    else:
+        title_setup = r"\maketitle"
+
     return {
         "PROJECT_NAME": project_slug,
         "TITLE": _latex_escape(settings.title),
-        "AUTHOR": _latex_escape(settings.author),
+        "AUTHOR": author,
+        "AUTHOR_SETUP": author_setup,
+        "DATE_SETUP": r"\date{\today}" if settings.header_date else r"\date{}",
+        "HEADER_SWITCHES": header_switches,
+        "TITLE_SETUP": title_setup,
+        "TOC_SETUP": "\\tableofcontents\n\\clearpage" if settings.header_toc else "",
         "EMAIL": _latex_escape(settings.email),
         "INSTITUTE": _latex_escape(settings.institute),
         "DOCUMENTCLASS": settings.documentclass,
@@ -133,6 +173,18 @@ def _toml_escape(value: str) -> str:
     return value.replace("\\", "\\\\").replace('"', '\\"')
 
 
+#: Přepínače hlavičky. Jméno pole ve `Settings` je zároveň klíčem
+#: v konfiguraci i v souboru `.latte.toml`.
+HEADER_FLAGS = (
+    "header_titlepage",
+    "header_author",
+    "header_email",
+    "header_institute",
+    "header_date",
+    "header_toc",
+)
+
+
 def write_marker(root: Path, settings: Settings) -> None:
     lines = [
         "# Vytvořeno nástrojem latte. Soubor slouží příkazu `latte add`.",
@@ -148,6 +200,8 @@ def write_marker(root: Path, settings: Settings) -> None:
         f'institute = "{_toml_escape(settings.institute)}"',
         f'title = "{_toml_escape(settings.title)}"',
     ]
+    for flag in HEADER_FLAGS:
+        lines.append(f"{flag} = {'true' if getattr(settings, flag) else 'false'}")
     (root / MARKER).write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
@@ -170,6 +224,12 @@ def find_root(start: Path) -> "tuple[Path, Settings]":
                 email=str(data.get("email", "")),
                 institute=str(data.get("institute", "")),
                 title=str(data.get("title", "")),
+                **{
+                    flag: bool(
+                        data.get(flag, Settings.__dataclass_fields__[flag].default)
+                    )
+                    for flag in HEADER_FLAGS
+                },
             )
             return candidate, settings
     raise LatteError(

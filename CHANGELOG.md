@@ -7,6 +7,13 @@ Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.1.0/),
 
 ### Změněno
 
+- Šablona **article** už nezakládá složku `sections/` s ukázkovou
+  sekcí. Tělo `main.tex` je prázdné a rozvržení textu do souborů
+  zůstává na autorovi.
+- `latte new` nejdřív vypíše, s čím projekt založí, a zeptá se, jestli
+  ty hodnoty platí. Odpověď `n` projde volby jednu po druhé, takže
+  konfigurace zůstává výchozím nastavením a jednotlivý projekt si může
+  vzít jiné. Bez terminálu (roura, skript) platí výchozí hodnoty.
 - Výchozím fontem je **Times** (`newtxtext` + `newtxmath`) místo
   Computer Modern. Původní chování vrátí `latte config set font cm`.
 - Šablona **article** sází hlavičku standardním `\maketitle` (název,
@@ -18,6 +25,15 @@ Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.1.0/),
 
 ### Přidáno
 
+- Konfigurační volby `header_author`, `header_email`, `header_institute`,
+  `header_date`, `header_toc` a `header_titlepage`: co z údajů se má
+  v novém projektu vysázet v hlavičce, zda vložit obsah a jestli místo
+  hlavičky použít titulní stranu. Nastavení si projekt pamatuje
+  v `.latte.toml`, takže ho převezmou i podprojekty přidané
+  `latte add`.
+- Symboly šablon `%%AUTHOR_SETUP%%`, `%%DATE_SETUP%%`,
+  `%%HEADER_SWITCHES%%`, `%%TITLE_SETUP%%` a `%%TOC_SETUP%%`, kterými
+  se volby `header_*` dostanou do `main.tex`.
 - `assets/header.tex` v šabloně **article**: makra `\latteemail`
   a `\latteinstitute` s hodnotami z konfigurace a přepínače
   `\headeremail`/`\headerinstitute`, kterými se údaje zařadí pod jméno

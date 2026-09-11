@@ -85,14 +85,14 @@ latte config edit
 
 ### `article` (výchozí)
 
-Jeden dokument. Sdílená preambule v `assets/`, text po sekcích
-v `sections/`, obrázky v `figures/`.
+Jeden dokument. Sdílená preambule v `assets/`, obrázky v `figures/`.
+Tělo `main.tex` zůstává prázdné -- rozvržení textu do souborů je na
+autorovi.
 
 ```
 main.tex
 assets/    packages.tex  style.tex  macros.tex  listing.tex
            header.tex  titlepage.tex  literatura.bib
-sections/  01-uvod.tex
 figures/
 .latexmkrc  Makefile  .vscode/settings.json  .gitignore  README.md
 ```
@@ -106,8 +106,13 @@ v `assets/header.tex`; pod jméno autora je přidají přepínače v `main.tex`:
 \headerinstitutetrue    % instituce pod jméno
 ```
 
+Co se do hlavičky dostane hned při zakládání, řídí volby `header_*`
+(viz [Konfigurace](#konfigurace)) a dotaz, kterým se `latte new` ptá,
+jestli výchozí hodnoty platí i pro tenhle projekt.
+
 Místo hlavičky lze vysázet titulní stranu se šikmou hranou -- v `main.tex`
-stačí místo `\maketitle` vložit `\input{assets/titlepage.tex}`.
+stačí místo `\maketitle` vložit `\input{assets/titlepage.tex}`
+(nebo rovnou `header_titlepage = true`).
 
 Dál obsahuje věty a definice se společným číslováním, čtyři úrovně
 barevných rámečků, sazbu zdrojového kódu a citace podle ČSN ISO 690
@@ -176,7 +181,23 @@ projects_dir = ""
 author = "Jméno Příjmení"
 email = "jmeno@example.com"
 institute = ""
+
+# Co z údajů výše se vysází v hlavičce nového projektu.
+header_author = true
+header_email = false
+header_institute = false
+header_date = true
+header_toc = true        # \tableofcontents v main.tex
+header_titlepage = false # titulní strana místo \maketitle
 ```
+
+`latte new` tyhle hodnoty nejdřív vypíše a zeptá se, jestli platí.
+Odpověď `n` projde volby jednu po druhé, takže konfigurace zůstane
+výchozím nastavením a projekt si může vzít jiné. Bez terminálu (roura,
+skript) se bere odpověď `a`, tedy výchozí hodnoty.
+
+Titulní strana sází e-mail i instituci sama; s `header_titlepage = true`
+proto přepínače `header_email` a `header_institute` nic nepřidávají.
 
 ## Vlastní šablony
 
@@ -195,7 +216,9 @@ Uvnitř šablony platí dvě konvence:
 * segment cesty začínající `dot-` se přejmenuje na `.`
   (`dot-vscode/settings.json` → `.vscode/settings.json`).
 
-Dostupné symboly: `%%TITLE%%`, `%%AUTHOR%%`, `%%EMAIL%%`,
+Dostupné symboly: `%%TITLE%%`, `%%AUTHOR%%`, `%%AUTHOR_SETUP%%`,
+`%%DATE_SETUP%%`, `%%HEADER_SWITCHES%%`, `%%TITLE_SETUP%%`,
+`%%TOC_SETUP%%`, `%%EMAIL%%`,
 `%%INSTITUTE%%`, `%%PROJECT_NAME%%`, `%%DOCUMENTCLASS%%`,
 `%%CLASS_OPTIONS%%`, `%%ENGINE%%`, `%%FONT%%`, `%%FONT_LABEL%%`,
 `%%FONT_SETUP%%`, `%%MATHFONT_SETUP%%`, `%%ENCODING_SETUP%%`,
